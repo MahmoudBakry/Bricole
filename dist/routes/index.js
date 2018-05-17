@@ -16,6 +16,10 @@ var _city = require('./city.route');
 
 var _city2 = _interopRequireDefault(_city);
 
+var _bricol = require('./bricol.route');
+
+var _bricol2 = _interopRequireDefault(_bricol);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -32,5 +36,7 @@ var router = _express2.default.Router();
 router.use('/', _user2.default);
 router.use('/jobs', _job2.default);
 router.use('/cities', _city2.default);
+
+router.use('/bricoles', requireAuth, _bricol2.default);
 exports.default = router;
 //# sourceMappingURL=index.js.map

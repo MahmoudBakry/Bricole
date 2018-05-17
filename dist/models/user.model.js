@@ -88,6 +88,9 @@ var UserSchema = new _mongoose.Schema({
     nationalIdImgs: [{
         type: String
     }],
+    policyIdentityImage: {
+        type: String
+    },
     pushTokens: [{
         type: String
     }]
