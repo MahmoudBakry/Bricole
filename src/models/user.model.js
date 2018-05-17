@@ -72,6 +72,9 @@ const UserSchema = new Schema({
     nationalIdImgs: [{
         type: String,
     }],
+    policyIdentityImage : {
+        type: String
+    },
     pushTokens: [{
         type: String
     }]
