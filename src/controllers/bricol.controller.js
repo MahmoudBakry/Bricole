@@ -128,7 +128,7 @@ export default {
                 let lang1 = parseFloat(bricolLocationToDistance[0]);
                 let lat1 = parseFloat(bricolLocationToDistance[1]);
                 console.log(lang1)
-                
+
                 //scound location point
                 let lang2 = parseFloat(userLocation[0]);
                 let lat2 = parseFloat(userLocation[1]);
@@ -143,13 +143,13 @@ export default {
                 let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
                 let d = R * c; // Distance in km
                 //console.log(d)
-                
+
                 //get count of bids for each bricol
-                let countOfBids = await Bid.count({bricol : allDocs[x].id})
-                result.push({bricol: allDocs[x], distanceInKm : d, countOfBids})
+                let countOfBids = await Bid.count({ bricol: allDocs[x].id })
+                result.push({ bricol: allDocs[x], distanceInKm: d, countOfBids })
             }
 
-           let count = result.length;
+            let count = await Bricol.count(query);
             return res.send(new ApiResponse(
                 result,
                 page,

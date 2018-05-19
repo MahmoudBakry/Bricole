@@ -259,21 +259,25 @@ exports.default = {
                             break;
 
                         case 40:
-                            count = result.length;
+                            _context2.next = 42;
+                            return _bricole2.default.count(query);
+
+                        case 42:
+                            count = _context2.sent;
                             return _context2.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 44:
-                            _context2.prev = 44;
+                        case 46:
+                            _context2.prev = 46;
                             _context2.t0 = _context2['catch'](0);
 
                             next(_context2.t0);
 
-                        case 47:
+                        case 49:
                         case 'end':
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2, [[0, 44]]);
+            }, _callee2, _this2, [[0, 46]]);
         }))();
     },
 
