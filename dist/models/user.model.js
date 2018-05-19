@@ -65,6 +65,11 @@ var UserSchema = new _mongoose.Schema({
         ref: 'city',
         required: true
     },
+    location: {
+        type: [Number], // Don't forget [0=>longitude,1=>latitude]
+        required: true,
+        index: '2d'
+    },
     gender: {
         type: String,
         enum: ['male', 'female']

@@ -49,6 +49,11 @@ const UserSchema = new Schema({
         ref: 'city',
         required: true
     },
+    location: {
+        type: [Number], // Don't forget [0=>longitude,1=>latitude]
+        required: true,
+        index: '2d'
+    },
     gender: {
         type: String,
         enum: ['male', 'female']
@@ -72,7 +77,7 @@ const UserSchema = new Schema({
     nationalIdImgs: [{
         type: String,
     }],
-    policyIdentityImage : {
+    policyIdentityImage: {
         type: String
     },
     pushTokens: [{

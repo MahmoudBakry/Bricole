@@ -68,7 +68,7 @@ exports.default = {
 
         var isUpdate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-        return [(0, _check.body)("userName").exists().withMessage("userName is required"), (0, _check.body)("jobs").exists().withMessage("jobs is required"), (0, _check.body)("vehicleToWork").exists().withMessage("vehicleToWork is required"), (0, _check.body)("firstName").exists().withMessage("firstName is required"), (0, _check.body)("lastName").exists().withMessage("lastName is required"), (0, _check.body)("city").exists().withMessage("city is required"), (0, _check.body)("password").exists().withMessage("password is required"), (0, _check.body)("phone").exists().withMessage("phone is requires")
+        return [(0, _check.body)("userName").exists().withMessage("userName is required"), (0, _check.body)("jobs").exists().withMessage("jobs is required"), (0, _check.body)("lang").exists().withMessage("lang is required"), (0, _check.body)("lat").exists().withMessage("lat is required"), (0, _check.body)("vehicleToWork").exists().withMessage("vehicleToWork is required"), (0, _check.body)("firstName").exists().withMessage("firstName is required"), (0, _check.body)("lastName").exists().withMessage("lastName is required"), (0, _check.body)("city").exists().withMessage("city is required"), (0, _check.body)("password").exists().withMessage("password is required"), (0, _check.body)("phone").exists().withMessage("phone is requires")
         //make custome validation to phone to check on phone[unique, isPhone]
         .custom(function () {
             var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(value, _ref2) {
@@ -117,7 +117,7 @@ exports.default = {
         var _this2 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var validationErrors, createdUser, newUser;
+            var validationErrors, lang, lat, userLocation, createdUser, newUser;
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -146,34 +146,42 @@ exports.default = {
                             req.body.img = _context2.sent;
 
                         case 8:
+                            lang = req.body.lang; //long
+
+                            lat = req.body.lat; //lat
+
+                            userLocation = [lang, lat]; //modify location 
+
+                            req.body.location = userLocation;
+
                             req.body.birthDate = parseInt(req.body.birthDate);
-                            _context2.next = 11;
+                            _context2.next = 15;
                             return _user2.default.create(req.body);
 
-                        case 11:
+                        case 15:
                             createdUser = _context2.sent;
-                            _context2.next = 14;
+                            _context2.next = 18;
                             return _user2.default.findById(createdUser.id).populate('city').populate('jobs');
 
-                        case 14:
+                        case 18:
                             newUser = _context2.sent;
 
                             res.status(201).send({ user: newUser, token: generateToken(createdUser.id) });
-                            _context2.next = 21;
+                            _context2.next = 25;
                             break;
 
-                        case 18:
-                            _context2.prev = 18;
+                        case 22:
+                            _context2.prev = 22;
                             _context2.t0 = _context2["catch"](3);
 
                             next(_context2.t0);
 
-                        case 21:
+                        case 25:
                         case "end":
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2, [[3, 18]]);
+            }, _callee2, _this2, [[3, 22]]);
         }))();
     },
 

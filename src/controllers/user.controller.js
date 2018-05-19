@@ -39,6 +39,8 @@ export default {
         return [
             body("userName").exists().withMessage("userName is required"),
             body("jobs").exists().withMessage("jobs is required"),
+            body("lang").exists().withMessage("lang is required"),
+            body("lat").exists().withMessage("lat is required"),
             body("vehicleToWork").exists().withMessage("vehicleToWork is required"),
             body("firstName").exists().withMessage("firstName is required"),
             body("lastName").exists().withMessage("lastName is required"),
@@ -69,6 +71,11 @@ export default {
             if (req.file) {
                 req.body.img = await toImgUrl(req.file)
             }
+            let lang = req.body.lang;   //long
+            let lat = req.body.lat;//lat
+            let userLocation = [lang, lat] //modify location 
+            req.body.location = userLocation;
+
             req.body.birthDate = parseInt(req.body.birthDate)
             let createdUser = await User.create(req.body);
             let newUser = await User.findById(createdUser.id)

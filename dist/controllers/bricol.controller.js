@@ -214,6 +214,77 @@ exports.default = {
                 }
             }, _callee2, _this2, [[0, 23]]);
         }))();
+    },
+
+    //validation input of calulate price 
+    validateBodyOfCalulatePrice: function validateBodyOfCalulatePrice() {
+        return [(0, _check.body)("bricol").exists().withMessage("bricol location is required"), (0, _check.body)("user").exists().withMessage("user location is required")];
+    },
+
+    //calculate distance between bricole and user 
+    calculateDistance: function calculateDistance(req, res, next) {
+        var _this3 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+            var validationErrors, lang1, lat1, lang2, lat2, R, dLat, dLon, a, c, d, price, cost;
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                    switch (_context3.prev = _context3.next) {
+                        case 0:
+                            _context3.prev = 0;
+                            validationErrors = (0, _check.validationResult)(req).array();
+
+                            if (!(validationErrors.length > 0)) {
+                                _context3.next = 4;
+                                break;
+                            }
+
+                            return _context3.abrupt('return', next(new _ApiError2.default(422, validationErrors)));
+
+                        case 4:
+                            //first locattion point
+                            lang1 = parseFloat(req.body.from.lang);
+                            lat1 = parseFloat(req.body.from.lat);
+                            //scound location point
+
+                            lang2 = parseFloat(req.body.to.lang);
+                            lat2 = parseFloat(req.body.to.lat);
+                            R = 6371; // Radius of the earth in km
+
+                            dLat = deg2rad(lat2 - lat1); // deg2rad above
+
+                            dLon = deg2rad(lang2 - lang1);
+                            a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                            c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                            d = R * c; // Distance in km
+
+                            console.log(d);
+                            //fetch price for each km
+                            _context3.next = 17;
+                            return Price.findOne();
+
+                        case 17:
+                            price = _context3.sent;
+                            cost = d * price.price;
+                            return _context3.abrupt('return', res.status(200).json({
+                                "cost": cost,
+                                "distance": d,
+                                "priceOfEachKm": price.price
+                            }));
+
+                        case 22:
+                            _context3.prev = 22;
+                            _context3.t0 = _context3['catch'](0);
+
+                            next(_context3.t0);
+
+                        case 25:
+                        case 'end':
+                            return _context3.stop();
+                    }
+                }
+            }, _callee3, _this3, [[0, 22]]);
+        }))();
     }
 };
 //# sourceMappingURL=bricol.controller.js.map
