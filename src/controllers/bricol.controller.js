@@ -4,7 +4,7 @@ import ApiResponse from '../helpers/ApiResponse';
 import ApiError from '../helpers/ApiError';
 import { toImgUrl } from '../utils/index'
 import { body, param, validationResult } from 'express-validator/check';
-
+import { escapeRegExp } from 'lodash';
 export default {
 
     //validation for create new bricol
@@ -56,7 +56,7 @@ export default {
     //fetch all bricoles 
     async retriveAllBricol(req, res, next) {
         try {
-            let { vehicleToWork, job, bricolerGender } = req.query
+            let { vehicleToWork, job, bricolerGender, startPrice, endPrice } = req.query
             let query = {};
             //filter by jobs
             if (job) {
@@ -77,7 +77,28 @@ export default {
             //filter by bricolerGender
             if (bricolerGender)
                 query.bricolerGender = bricolerGender;
+            //filteration by start & end price [budget]
+            if (startPrice)
+                query.budget = { $gte: +startPrice };
+            if (endPrice)
+                query.budget = { ...query.budget, $lte: +endPrice };
+            //search by word in title of bricol 
+            if (req.query.q) {
+                const matchQueryRegx = new RegExp(escapeRegExp(req.query.q), 'i')
+                query.title = matchQueryRegx;
+            }
 
+            //sorted docs
+            let sort = {}
+            if (req.query.maxPrice) {
+                sort.budget = -1;
+                sort.creationDate = -1;
+            }
+
+            if(req.query.minPrice){
+                sort.budget = 1;
+                sort.creationDate = -1;
+            }
             const limit = parseInt(req.query.limit) || 20;
             const page = req.query.page || 1;
 
@@ -85,7 +106,7 @@ export default {
                 .populate('user')
                 .populate('job')
                 .skip((page - 1) * limit)
-                .limit(limit).sort({ creationDate: -1 })
+                .limit(limit).sort(sort)
             let count = await Bricol.count(query);
 
             return res.send(new ApiResponse(

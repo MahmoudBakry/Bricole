@@ -20,6 +20,10 @@ var _bricol = require('./bricol.route');
 
 var _bricol2 = _interopRequireDefault(_bricol);
 
+var _bid = require('./bid.route');
+
+var _bid2 = _interopRequireDefault(_bid);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -38,5 +42,6 @@ router.use('/jobs', _job2.default);
 router.use('/cities', _city2.default);
 
 router.use('/bricoles', requireAuth, _bricol2.default);
+router.use('/', _bid2.default);
 exports.default = router;
 //# sourceMappingURL=index.js.map

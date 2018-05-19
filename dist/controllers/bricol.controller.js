@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _bricole = require('../models/bricole.model');
 
 var _bricole2 = _interopRequireDefault(_bricole);
@@ -23,6 +25,8 @@ var _ApiError2 = _interopRequireDefault(_ApiError);
 var _index = require('../utils/index');
 
 var _check = require('express-validator/check');
+
+var _lodash = require('lodash');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -139,14 +143,14 @@ exports.default = {
         var _this2 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var _req$query, vehicleToWork, job, bricolerGender, query, limit, page, allDocs, count;
+            var _req$query, vehicleToWork, job, bricolerGender, startPrice, endPrice, query, matchQueryRegx, sort, limit, page, allDocs, count;
 
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
                         case 0:
                             _context2.prev = 0;
-                            _req$query = req.query, vehicleToWork = _req$query.vehicleToWork, job = _req$query.job, bricolerGender = _req$query.bricolerGender;
+                            _req$query = req.query, vehicleToWork = _req$query.vehicleToWork, job = _req$query.job, bricolerGender = _req$query.bricolerGender, startPrice = _req$query.startPrice, endPrice = _req$query.endPrice;
                             query = {};
                             //filter by jobs
 
@@ -161,33 +165,54 @@ exports.default = {
                             }
                             //filter by bricolerGender
                             if (bricolerGender) query.bricolerGender = bricolerGender;
+                            //filteration by start & end price [budget]
+                            if (startPrice) query.budget = { $gte: +startPrice };
+                            if (endPrice) query.budget = _extends({}, query.budget, { $lte: +endPrice });
+                            //search by word in title of bricol 
+                            if (req.query.q) {
+                                matchQueryRegx = new RegExp((0, _lodash.escapeRegExp)(req.query.q), 'i');
 
+                                query.title = matchQueryRegx;
+                            }
+
+                            //sorted docs
+                            sort = {};
+
+                            if (req.query.maxPrice) {
+                                sort.budget = -1;
+                                sort.creationDate = -1;
+                            }
+
+                            if (req.query.minPrice) {
+                                sort.budget = 1;
+                                sort.creationDate = -1;
+                            }
                             limit = parseInt(req.query.limit) || 20;
                             page = req.query.page || 1;
-                            _context2.next = 10;
-                            return _bricole2.default.find(query).populate('user').populate('job').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
+                            _context2.next = 16;
+                            return _bricole2.default.find(query).populate('user').populate('job').skip((page - 1) * limit).limit(limit).sort(sort);
 
-                        case 10:
+                        case 16:
                             allDocs = _context2.sent;
-                            _context2.next = 13;
+                            _context2.next = 19;
                             return _bricole2.default.count(query);
 
-                        case 13:
+                        case 19:
                             count = _context2.sent;
                             return _context2.abrupt('return', res.send(new _ApiResponse2.default(allDocs, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 17:
-                            _context2.prev = 17;
+                        case 23:
+                            _context2.prev = 23;
                             _context2.t0 = _context2['catch'](0);
 
                             next(_context2.t0);
 
-                        case 20:
+                        case 26:
                         case 'end':
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2, [[0, 17]]);
+            }, _callee2, _this2, [[0, 23]]);
         }))();
     }
 };
