@@ -10,6 +10,14 @@ var _bricole = require('../models/bricole.model');
 
 var _bricole2 = _interopRequireDefault(_bricole);
 
+var _user = require('../models/user.model');
+
+var _user2 = _interopRequireDefault(_user);
+
+var _bid = require('../models/bid.model');
+
+var _bid2 = _interopRequireDefault(_bid);
+
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -147,7 +155,7 @@ exports.default = {
         var _this2 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var _req$query, vehicleToWork, job, bricolerGender, startPrice, endPrice, query, matchQueryRegx, sort, limit, page, allDocs, count;
+            var _req$query, vehicleToWork, job, bricolerGender, startPrice, endPrice, query, matchQueryRegx, sort, limit, page, allDocs, userLocation, result, x, bricolLocationToDistance, lang1, lat1, lang2, lat2, R, dLat, dLon, a, c, d, countOfBids, count;
 
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
@@ -198,25 +206,74 @@ exports.default = {
 
                         case 16:
                             allDocs = _context2.sent;
-                            _context2.next = 19;
-                            return _bricole2.default.count(query);
 
-                        case 19:
-                            count = _context2.sent;
-                            return _context2.abrupt('return', res.send(new _ApiResponse2.default(allDocs, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 23:
-                            _context2.prev = 23;
+                            //prepare response 
+
+                            //1 - calculate distance between user and bricol
+                            userLocation = req.user.location;
+                            result = [];
+                            x = 0;
+
+                        case 20:
+                            if (!(x < allDocs.length)) {
+                                _context2.next = 40;
+                                break;
+                            }
+
+                            bricolLocationToDistance = allDocs[x].location;
+
+                            //first locattion point
+
+                            lang1 = parseFloat(bricolLocationToDistance[0]);
+                            lat1 = parseFloat(bricolLocationToDistance[1]);
+
+                            console.log(lang1);
+
+                            //scound location point
+                            lang2 = parseFloat(userLocation[0]);
+                            lat2 = parseFloat(userLocation[1]);
+                            R = 6371; // Radius of the earth in km
+
+                            dLat = deg2rad(lat2 - lat1); // deg2rad above
+
+                            dLon = deg2rad(lang2 - lang1);
+                            a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                            c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                            d = R * c; // Distance in km
+                            //console.log(d)
+
+                            //get count of bids for each bricol
+
+                            _context2.next = 35;
+                            return _bid2.default.count({ bricol: allDocs[x].id });
+
+                        case 35:
+                            countOfBids = _context2.sent;
+
+                            result.push({ bricol: allDocs[x], distanceInKm: d, countOfBids: countOfBids });
+
+                        case 37:
+                            x++;
+                            _context2.next = 20;
+                            break;
+
+                        case 40:
+                            count = result.length;
+                            return _context2.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
+
+                        case 44:
+                            _context2.prev = 44;
                             _context2.t0 = _context2['catch'](0);
 
                             next(_context2.t0);
 
-                        case 26:
+                        case 47:
                         case 'end':
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2, [[0, 23]]);
+            }, _callee2, _this2, [[0, 44]]);
         }))();
     },
 

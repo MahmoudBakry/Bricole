@@ -1,4 +1,6 @@
 import Bricol from '../models/bricole.model';
+import User from '../models/user.model';
+import Bid from '../models/bid.model';
 import mongoose from 'mongoose';
 import ApiResponse from '../helpers/ApiResponse';
 import ApiError from '../helpers/ApiError';
@@ -113,10 +115,43 @@ export default {
                 .populate('job')
                 .skip((page - 1) * limit)
                 .limit(limit).sort(sort)
-            let count = await Bricol.count(query);
 
+            //prepare response 
+
+            //1 - calculate distance between user and bricol
+            let userLocation = req.user.location;
+            let result = []
+            for (let x = 0; x < allDocs.length; x++) {
+                let bricolLocationToDistance = allDocs[x].location;
+
+                //first locattion point
+                let lang1 = parseFloat(bricolLocationToDistance[0]);
+                let lat1 = parseFloat(bricolLocationToDistance[1]);
+                console.log(lang1)
+                
+                //scound location point
+                let lang2 = parseFloat(userLocation[0]);
+                let lat2 = parseFloat(userLocation[1]);
+
+                let R = 6371; // Radius of the earth in km
+                let dLat = deg2rad(lat2 - lat1);  // deg2rad above
+                let dLon = deg2rad(lang2 - lang1);
+                let a =
+                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                let d = R * c; // Distance in km
+                //console.log(d)
+                
+                //get count of bids for each bricol
+                let countOfBids = await Bid.count({bricol : allDocs[x].id})
+                result.push({bricol: allDocs[x], distanceInKm : d, countOfBids})
+            }
+
+           let count = result.length;
             return res.send(new ApiResponse(
-                allDocs,
+                result,
                 page,
                 Math.ceil(count / limit),
                 limit,
