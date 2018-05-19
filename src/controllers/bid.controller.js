@@ -1,4 +1,5 @@
 import Bid from '../models/bid.model';
+import Bricol from '../models/bricole.model';
 import mongoose from 'mongoose';
 import ApiResponse from '../helpers/ApiResponse';
 import ApiError from '../helpers/ApiError';
@@ -54,6 +55,20 @@ export default {
                 req
             ))
 
+        } catch (err) {
+            next(err)
+        }
+    },
+
+    //count number of bids to specific bricol
+    async countNumberOfBidToONeBricol(req, res, next) {
+        try {
+            let bricolId = req.params.bricolId;
+            let bricolDetails = await Bricol.findById(bricolId);
+            if (!bricolDetails)
+                return res.status(404).end();
+            let count = await Bid.count({ bricol: bricolId })
+            return res.status(200).json({count});
         } catch (err) {
             next(err)
         }

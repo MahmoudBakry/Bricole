@@ -11,5 +11,7 @@ router.route('/bricoles/:bricolId/bids')
     BidController.createNewBid)
     .get(requireAuth, BidController.retriveAllBidsForBricol)
 
+router.route('/bricoles/:bricolId/bids-count')
+    .get(requireAuth, BidController.countNumberOfBidToONeBricol)
 
 export default router;

@@ -25,5 +25,7 @@ var router = _express2.default.Router();
 
 router.route('/bricoles/:bricolId/bids').post(requireAuth, _bid2.default.validateBody(), _bid2.default.createNewBid).get(requireAuth, _bid2.default.retriveAllBidsForBricol);
 
+router.route('/bricoles/:bricolId/bids-count').get(requireAuth, _bid2.default.countNumberOfBidToONeBricol);
+
 exports.default = router;
 //# sourceMappingURL=bid.route.js.map

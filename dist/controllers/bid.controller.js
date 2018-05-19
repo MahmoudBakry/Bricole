@@ -8,6 +8,10 @@ var _bid = require('../models/bid.model');
 
 var _bid2 = _interopRequireDefault(_bid);
 
+var _bricole = require('../models/bricole.model');
+
+var _bricole2 = _interopRequireDefault(_bricole);
+
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -120,6 +124,55 @@ exports.default = {
                     }
                 }
             }, _callee2, _this2, [[0, 13]]);
+        }))();
+    },
+
+
+    //count number of bids to specific bricol
+    countNumberOfBidToONeBricol: function countNumberOfBidToONeBricol(req, res, next) {
+        var _this3 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+            var bricolId, bricolDetails, count;
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                    switch (_context3.prev = _context3.next) {
+                        case 0:
+                            _context3.prev = 0;
+                            bricolId = req.params.bricolId;
+                            _context3.next = 4;
+                            return _bricole2.default.findById(bricolId);
+
+                        case 4:
+                            bricolDetails = _context3.sent;
+
+                            if (bricolDetails) {
+                                _context3.next = 7;
+                                break;
+                            }
+
+                            return _context3.abrupt('return', res.status(404).end());
+
+                        case 7:
+                            _context3.next = 9;
+                            return _bid2.default.count({ bricol: bricolId });
+
+                        case 9:
+                            count = _context3.sent;
+                            return _context3.abrupt('return', res.status(200).json({ count: count }));
+
+                        case 13:
+                            _context3.prev = 13;
+                            _context3.t0 = _context3['catch'](0);
+
+                            next(_context3.t0);
+
+                        case 16:
+                        case 'end':
+                            return _context3.stop();
+                    }
+                }
+            }, _callee3, _this3, [[0, 13]]);
         }))();
     }
 };

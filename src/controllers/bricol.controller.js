@@ -128,7 +128,7 @@ export default {
         }
     },
     //validation input of calulate price 
-    validateBodyOfCalulatePrice() {
+    validateBodyOfCalulateDisance() {
         return [
             body("bricol").exists().withMessage("bricol location is required"),
             body("user").exists().withMessage("user location is required")
@@ -158,6 +158,21 @@ export default {
             let d = R * c; // Distance in km
             console.log(d);
             return res.status(200).json({ distanceInKm: d })
+        } catch (err) {
+            next(err)
+        }
+    },
+    //retrive one bricol 
+    async reriveOneBricolDetails(req, res, next) {
+        let bricolId = req.params.bricolId;
+        try {
+            let bricolDetails = await Bricol.findById(bricolId)
+                .populate('user')
+                .populate('job')
+
+            if (!bricolDetails)
+                return res.status(404).end();
+            return res.status(200).json(bricolDetails)
         } catch (err) {
             next(err)
         }

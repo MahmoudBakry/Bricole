@@ -221,7 +221,7 @@ exports.default = {
     },
 
     //validation input of calulate price 
-    validateBodyOfCalulatePrice: function validateBodyOfCalulatePrice() {
+    validateBodyOfCalulateDisance: function validateBodyOfCalulateDisance() {
         return [(0, _check.body)("bricol").exists().withMessage("bricol location is required"), (0, _check.body)("user").exists().withMessage("user location is required")];
     },
 
@@ -277,6 +277,49 @@ exports.default = {
                     }
                 }
             }, _callee3, _this3, [[0, 18]]);
+        }))();
+    },
+
+    //retrive one bricol 
+    reriveOneBricolDetails: function reriveOneBricolDetails(req, res, next) {
+        var _this4 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+            var bricolId, bricolDetails;
+            return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                while (1) {
+                    switch (_context4.prev = _context4.next) {
+                        case 0:
+                            bricolId = req.params.bricolId;
+                            _context4.prev = 1;
+                            _context4.next = 4;
+                            return _bricole2.default.findById(bricolId).populate('user').populate('job');
+
+                        case 4:
+                            bricolDetails = _context4.sent;
+
+                            if (bricolDetails) {
+                                _context4.next = 7;
+                                break;
+                            }
+
+                            return _context4.abrupt('return', res.status(404).end());
+
+                        case 7:
+                            return _context4.abrupt('return', res.status(200).json(bricolDetails));
+
+                        case 10:
+                            _context4.prev = 10;
+                            _context4.t0 = _context4['catch'](1);
+
+                            next(_context4.t0);
+
+                        case 13:
+                        case 'end':
+                            return _context4.stop();
+                    }
+                }
+            }, _callee4, _this4, [[1, 10]]);
         }))();
     }
 };

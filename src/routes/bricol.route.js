@@ -8,9 +8,15 @@ router.route('/')
     multerSaveTo('bricol').array('imgs'),
     BricolController.validateBody(),
     BricolController.addNewBricol)
-
     .get(BricolController.retriveAllBricol)
 
+router.route('/:bricolId')
+    .get(BricolController.reriveOneBricolDetails)
+
 router.route('/:bricolId/users/:usersId/distance-location')
-    .put(BricolController.calculateDistance)
+    .put(
+        BricolController.validateBodyOfCalulateDisance(),
+        BricolController.calculateDistance)
+
+
 export default router;
