@@ -5,6 +5,12 @@ import ApiError from '../helpers/ApiError';
 import { toImgUrl } from '../utils/index'
 import { body, param, validationResult } from 'express-validator/check';
 import { escapeRegExp } from 'lodash';
+
+
+let deg2rad = (deg) => {
+    return deg * (Math.PI / 180)
+}
+
 export default {
 
     //validation for create new bricol
@@ -135,11 +141,11 @@ export default {
             if (validationErrors.length > 0)
                 return next(new ApiError(422, validationErrors));
             //first locattion point
-            let lang1 = parseFloat(req.body.from.lang);
-            let lat1 = parseFloat(req.body.from.lat);
+            let lang1 = parseFloat(req.body.bricol.lang);
+            let lat1 = parseFloat(req.body.bricol.lat);
             //scound location point
-            let lang2 = parseFloat(req.body.to.lang);
-            let lat2 = parseFloat(req.body.to.lat);
+            let lang2 = parseFloat(req.body.user.lang);
+            let lat2 = parseFloat(req.body.user.lat);
 
             let R = 6371; // Radius of the earth in km
             let dLat = deg2rad(lat2 - lat1);  // deg2rad above
@@ -151,14 +157,7 @@ export default {
             let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             let d = R * c; // Distance in km
             console.log(d);
-            //fetch price for each km
-            let price = await Price.findOne();
-            let cost = d * price.price;
-            return res.status(200).json({
-                "cost": cost,
-                "distance": d,
-                "priceOfEachKm": price.price
-            });
+            return res.status(200).json({ distanceInKm: d })
         } catch (err) {
             next(err)
         }

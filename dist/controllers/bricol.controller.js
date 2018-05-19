@@ -32,6 +32,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+var deg2rad = function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+};
+
 exports.default = {
 
     //validation for create new bricol
@@ -226,7 +230,7 @@ exports.default = {
         var _this3 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-            var validationErrors, lang1, lat1, lang2, lat2, R, dLat, dLon, a, c, d, price, cost;
+            var validationErrors, lang1, lat1, lang2, lat2, R, dLat, dLon, a, c, d;
             return regeneratorRuntime.wrap(function _callee3$(_context3) {
                 while (1) {
                     switch (_context3.prev = _context3.next) {
@@ -243,12 +247,12 @@ exports.default = {
 
                         case 4:
                             //first locattion point
-                            lang1 = parseFloat(req.body.from.lang);
-                            lat1 = parseFloat(req.body.from.lat);
+                            lang1 = parseFloat(req.body.bricol.lang);
+                            lat1 = parseFloat(req.body.bricol.lat);
                             //scound location point
 
-                            lang2 = parseFloat(req.body.to.lang);
-                            lat2 = parseFloat(req.body.to.lat);
+                            lang2 = parseFloat(req.body.user.lang);
+                            lat2 = parseFloat(req.body.user.lat);
                             R = 6371; // Radius of the earth in km
 
                             dLat = deg2rad(lat2 - lat1); // deg2rad above
@@ -259,31 +263,20 @@ exports.default = {
                             d = R * c; // Distance in km
 
                             console.log(d);
-                            //fetch price for each km
-                            _context3.next = 17;
-                            return Price.findOne();
+                            return _context3.abrupt('return', res.status(200).json({ distanceInKm: d }));
 
-                        case 17:
-                            price = _context3.sent;
-                            cost = d * price.price;
-                            return _context3.abrupt('return', res.status(200).json({
-                                "cost": cost,
-                                "distance": d,
-                                "priceOfEachKm": price.price
-                            }));
-
-                        case 22:
-                            _context3.prev = 22;
+                        case 18:
+                            _context3.prev = 18;
                             _context3.t0 = _context3['catch'](0);
 
                             next(_context3.t0);
 
-                        case 25:
+                        case 21:
                         case 'end':
                             return _context3.stop();
                     }
                 }
-            }, _callee3, _this3, [[0, 22]]);
+            }, _callee3, _this3, [[0, 18]]);
         }))();
     }
 };

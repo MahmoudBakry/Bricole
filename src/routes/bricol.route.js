@@ -11,5 +11,6 @@ router.route('/')
 
     .get(BricolController.retriveAllBricol)
 
-
+router.route('/:bricolId/users/:usersId/distance-location')
+    .put(BricolController.calculateDistance)
 export default router;
