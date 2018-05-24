@@ -98,7 +98,11 @@ var UserSchema = new _mongoose.Schema({
     },
     pushTokens: [{
         type: String
-    }]
+    }],
+    rating: {
+        type: Number,
+        default: 0
+    }
 
 });
 

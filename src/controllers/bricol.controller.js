@@ -7,7 +7,7 @@ import ApiError from '../helpers/ApiError';
 import { toImgUrl } from '../utils/index'
 import { body, param, validationResult } from 'express-validator/check';
 import { escapeRegExp } from 'lodash';
-
+import * as _ from 'lodash';
 
 let deg2rad = (deg) => {
     return deg * (Math.PI / 180)
@@ -64,15 +64,15 @@ export default {
     //fetch all bricoles 
     async retriveAllBricol(req, res, next) {
         try {
-            let { vehicleToWork, job, bricolerGender, startPrice, endPrice } = req.query
+            let { vehicleToWork, jobs, bricolerGender, startPrice, endPrice } = req.query
             let query = {};
             //filter by jobs
-            if (job) {
-                job = job.split(',');
-                if (job.length > 1)
-                    query.job = { $in: job };
+            if (jobs) {
+                jobs = jobs.split(',');
+                if (jobs.length > 1)
+                    query.job = { $in: jobs };
                 else
-                    query.job = job[0];
+                    query.job = jobs[0];
             }
             //filter by vehicleToWork
             if (vehicleToWork) {

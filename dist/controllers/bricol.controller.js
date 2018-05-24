@@ -36,6 +36,10 @@ var _check = require('express-validator/check');
 
 var _lodash = require('lodash');
 
+var _ = _interopRequireWildcard(_lodash);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -155,20 +159,20 @@ exports.default = {
         var _this2 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var _req$query, vehicleToWork, job, bricolerGender, startPrice, endPrice, query, matchQueryRegx, sort, limit, page, allDocs, userLocation, result, x, bricolLocationToDistance, lang1, lat1, lang2, lat2, R, dLat, dLon, a, c, d, countOfBids, count;
+            var _req$query, vehicleToWork, jobs, bricolerGender, startPrice, endPrice, query, matchQueryRegx, sort, limit, page, allDocs, userLocation, result, x, bricolLocationToDistance, lang1, lat1, lang2, lat2, R, dLat, dLon, a, c, d, countOfBids, count;
 
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
                         case 0:
                             _context2.prev = 0;
-                            _req$query = req.query, vehicleToWork = _req$query.vehicleToWork, job = _req$query.job, bricolerGender = _req$query.bricolerGender, startPrice = _req$query.startPrice, endPrice = _req$query.endPrice;
+                            _req$query = req.query, vehicleToWork = _req$query.vehicleToWork, jobs = _req$query.jobs, bricolerGender = _req$query.bricolerGender, startPrice = _req$query.startPrice, endPrice = _req$query.endPrice;
                             query = {};
                             //filter by jobs
 
-                            if (job) {
-                                job = job.split(',');
-                                if (job.length > 1) query.job = { $in: job };else query.job = job[0];
+                            if (jobs) {
+                                jobs = jobs.split(',');
+                                if (jobs.length > 1) query.job = { $in: jobs };else query.job = jobs[0];
                             }
                             //filter by vehicleToWork
                             if (vehicleToWork) {

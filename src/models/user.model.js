@@ -82,7 +82,11 @@ const UserSchema = new Schema({
     },
     pushTokens: [{
         type: String
-    }]
+    }],
+    rating: {
+        type: Number,
+        default: 0
+    }
 
 });
 
