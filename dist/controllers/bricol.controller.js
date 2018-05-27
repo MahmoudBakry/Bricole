@@ -350,7 +350,7 @@ exports.default = {
         var _this4 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-            var bricolId, bricolDetails;
+            var bricolId, bricolDetails, countOfBids;
             return regeneratorRuntime.wrap(function _callee4$(_context4) {
                 while (1) {
                     switch (_context4.prev = _context4.next) {
@@ -371,20 +371,42 @@ exports.default = {
                             return _context4.abrupt('return', res.status(404).end());
 
                         case 7:
-                            return _context4.abrupt('return', res.status(200).json(bricolDetails));
+                            _context4.next = 9;
+                            return _bid2.default.count({ bricol: bricolDetails.id });
 
-                        case 10:
-                            _context4.prev = 10;
+                        case 9:
+                            countOfBids = _context4.sent;
+                            return _context4.abrupt('return', res.status(200).json({ bricol: bricolDetails, countOfBids: countOfBids }));
+
+                        case 13:
+                            _context4.prev = 13;
                             _context4.t0 = _context4['catch'](1);
 
                             next(_context4.t0);
 
-                        case 13:
+                        case 16:
                         case 'end':
                             return _context4.stop();
                     }
                 }
-            }, _callee4, _this4, [[1, 10]]);
+            }, _callee4, _this4, [[1, 13]]);
+        }))();
+    },
+
+    //retrive all bids under one bricol 
+    retriveAllBidsToOneBricol: function retriveAllBidsToOneBricol(req, res, next) {
+        var _this5 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+            return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                while (1) {
+                    switch (_context5.prev = _context5.next) {
+                        case 0:
+                        case 'end':
+                            return _context5.stop();
+                    }
+                }
+            }, _callee5, _this5);
         }))();
     }
 };
