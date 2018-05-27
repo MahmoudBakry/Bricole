@@ -208,15 +208,12 @@ export default {
             if (!bricolDetails)
                 return res.status(404).end();
 
-            let countOfBids = await Bid.count({bricol : bricolDetails.id})    
-            return res.status(200).json({ bricol : bricolDetails , countOfBids : countOfBids})
+            let countOfBids = await Bid.count({ bricol: bricolDetails.id })
+            return res.status(200).json({ bricol: bricolDetails, countOfBids: countOfBids })
         } catch (err) {
             next(err)
         }
     },
-    //retrive all bids under one bricol 
-    async retriveAllBidsToOneBricol(req, res, next) {
-
-    },
+   
 }
 

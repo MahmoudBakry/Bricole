@@ -391,23 +391,6 @@ exports.default = {
                 }
             }, _callee4, _this4, [[1, 13]]);
         }))();
-    },
-
-    //retrive all bids under one bricol 
-    retriveAllBidsToOneBricol: function retriveAllBidsToOneBricol(req, res, next) {
-        var _this5 = this;
-
-        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
-            return regeneratorRuntime.wrap(function _callee5$(_context5) {
-                while (1) {
-                    switch (_context5.prev = _context5.next) {
-                        case 0:
-                        case 'end':
-                            return _context5.stop();
-                    }
-                }
-            }, _callee5, _this5);
-        }))();
     }
 };
 //# sourceMappingURL=bricol.controller.js.map
