@@ -14,7 +14,13 @@ router.route('/signup')
     UserController.signUp
     )
 
-router.post("/signin", requireSignIn, UserController.signin);
+router.post("/signin", requireSignIn, UserController.signin)
+
+router.route('/users/:userId/bricols')
+    .get(requireAuth, UserController.fetchAllBricolOfOneUser)
+
+router.route('/bricolers/:bricolerId/bricols')
+    .get(requireAuth, UserController.fetchAllBricolOfOneBricoler)
 
 
 export default router;

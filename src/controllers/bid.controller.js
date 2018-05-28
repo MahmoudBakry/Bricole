@@ -1,5 +1,6 @@
 import Bid from '../models/bid.model';
 import Bricol from '../models/bricole.model';
+import User from '../models/user.model';
 import mongoose from 'mongoose';
 import ApiResponse from '../helpers/ApiResponse';
 import ApiError from '../helpers/ApiError';
@@ -68,10 +69,107 @@ export default {
             if (!bricolDetails)
                 return res.status(404).end();
             let count = await Bid.count({ bricol: bricolId })
-            return res.status(200).json({count});
+            return res.status(200).json({ count });
         } catch (err) {
             next(err)
         }
+    },
+
+    //retrive Bid Details 
+    async bidDetails(req, res, next) {
+        try {
+            let bidId = req.params.bidId;
+            let bidDetails = await Bid.findById(bidId)
+                .populate('user')
+                .populate('bricol')
+            if (!bidDetails)
+                return next(new ApiError(404));
+            console.log(bidDetails)
+            return res.status(200).json(bidDetails)
+        } catch (err) {
+            next(err)
+        }
+    },
+
+    //acceppt bid 
+    async accepptBid(req, res, next) {
+        let bidId = req.params.bidId;
+        let bricolId = req.params.bricolId;
+
+        let bidDetails = await Bid.findById(bidId);
+        if (!bidDetails)
+            return next(new ApiError(404));
+
+        let bricolDetails = await Bricol.findById(bricolId);
+        if (!bricolDetails)
+            return next(new ApiError(404));
+
+        let userId = req.user._id;
+        if (!(userId == bricolDetails.user))
+            return next(new ApiError(403, 'not access to this resource'))
+        //update bricol details 
+        bricolDetails.status = "assigned";
+        bricolDetails.bricoler = bidDetails.user;
+        await bricolDetails.save();
+        console.log(bricolDetails.bricoler)
+        //update bid 
+        bidDetails.status = 'accepted';
+        await bidDetails.save();
+
+        return res.status(204).end();
+
+    },
+
+
+    //refuse bid 
+    async refuseBid(req, res, next) {
+        let bidId = req.params.bidId;
+        let bricolId = req.params.bricolId;
+
+        let bidDetails = await Bid.findById(bidId);
+        if (!bidDetails)
+            return next(new ApiError(404));
+
+        let bricolDetails = await Bricol.findById(bricolId);
+        if (!bricolDetails)
+            return next(new ApiError(404));
+
+        let userId = req.user._id;
+        if (!(userId == bricolDetails.user))
+            return next(new ApiError(403, 'not access to this resource'))
+        //update bid 
+        bidDetails.status = 'refused';
+        await bidDetails.save();
+
+        return res.status(204).end();
+
+    },
+
+
+    //make bricole in progress  
+    async makeBricolInProgress(req, res, next) {
+        let bidId = req.params.bidId;
+        let bricolId = req.params.bricolId;
+
+        let bidDetails = await Bid.findById(bidId);
+        if (!bidDetails)
+            return next(new ApiError(404));
+
+        let bricolDetails = await Bricol.findById(bricolId);
+        if (!bricolDetails)
+            return next(new ApiError(404));
+
+
+        let userId = req.user._id;
+        console.log(typeof (userId))
+        if (!(userId == bricolDetails.bricoler))
+            return next(new ApiError(403, 'not access to this resource'))
+        //update bricole by bricoler  
+        bricolDetails.status = 'inProgress';
+        await bricolDetails.save();
+
+        return res.status(204).end();
+
     },
 
 }

@@ -9,7 +9,7 @@ const BidSchema = new Schema({
     },
     bricol: {
         type: Number,
-        ref: 'bricil',
+        ref: 'bricol',
         required: true
     },
     offerDescription: {

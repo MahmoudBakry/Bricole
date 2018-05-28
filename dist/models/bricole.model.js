@@ -79,6 +79,15 @@ var BricolSchema = new _mongoose.Schema({
         type: String,
         enum: ['fixed', 'monthly', 'weekly']
     },
+    bricoler: {
+        type: Number,
+        ref: 'user'
+    },
+    status: {
+        type: String,
+        enum: ['pendding', 'assigned', 'inProgress', 'done'],
+        default: 'pendding'
+    },
     creationDate: {
         type: Date,
         default: Date.now
@@ -99,5 +108,5 @@ BricolSchema.plugin(_mongooseAutoIncrement2.default.plugin, {
     startAt: 1
 });
 
-exports.default = _mongoose2.default.model("bricil", BricolSchema);
+exports.default = _mongoose2.default.model("bricol", BricolSchema);
 //# sourceMappingURL=bricole.model.js.map

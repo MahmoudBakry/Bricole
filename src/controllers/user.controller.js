@@ -1,4 +1,6 @@
 import User from "../models/user.model";
+import Bricol from '../models/bricole.model';
+import Bid from '../models/bid.model';
 import jwt from "jsonwebtoken";
 import config from "../config";
 import { body, validationResult } from 'express-validator/check';
@@ -95,6 +97,87 @@ export default {
             .populate('jobs')
         res.send({ userDetails, token: generateToken(user.id) });
     },
+
+    //retrive all bricols under one user 
+    async fetchAllBricolOfOneUser(req, res, next) {
+        try {
+            console.log('s')
+            const limit = parseInt(req.query.limit) || 20;
+            const page = req.query.page || 1;
+
+            let userId = req.params.userId
+            let query = {}
+            if (req.query.status)
+                query.status = req.query.status
+            query.user = userId
+            let allBricols = await Bricol.find(query)
+                .populate('user')
+                .populate('job')
+                .populate('bricoler')
+                .skip((page - 1) * limit)
+                .limit(limit).sort({ creationDate: -1 })
+
+            let result = []
+            for (let x = 0; x < allBricols.length; x++) {
+                let countBids = await Bid.count({ bricol: allBricols[x].id });
+                result.push({ bricol: allBricols[x], countBids: countBids })
+            }
+
+            let count = await Bricol.count(query);
+            return res.send(new ApiResponse(
+                result,
+                page,
+                Math.ceil(count / limit),
+                limit,
+                count,
+                req
+            ))
+
+        } catch (err) {
+            next(err)
+        }
+    },
+
+    //retrive all bricols under one bricoler 
+    async fetchAllBricolOfOneBricoler(req, res, next) {
+        try {
+            console.log('s')
+            const limit = parseInt(req.query.limit) || 20;
+            const page = req.query.page || 1;
+
+            let bricolerId = req.params.bricolerId
+            let query = {}
+            if (req.query.status)
+                query.status = req.query.status
+            query.bricoler = bricolerId
+            let allBricols = await Bricol.find(query)
+                .populate('user')
+                .populate('job')
+                .populate('bricoler')
+                .skip((page - 1) * limit)
+                .limit(limit).sort({ creationDate: -1 })
+
+            let result = []
+            for (let x = 0; x < allBricols.length; x++) {
+                let countBids = await Bid.count({ bricol: allBricols[x].id });
+                result.push({ bricol: allBricols[x], countBids: countBids })
+            }
+
+            let count = await Bricol.count(query);
+            return res.send(new ApiResponse(
+                result,
+                page,
+                Math.ceil(count / limit),
+                limit,
+                count,
+                req
+            ))
+
+        } catch (err) {
+            next(err)
+        }
+    },
+
 
 
 }

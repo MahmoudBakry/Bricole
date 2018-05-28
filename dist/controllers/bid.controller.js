@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _bid = require('../models/bid.model');
 
 var _bid2 = _interopRequireDefault(_bid);
@@ -11,6 +13,10 @@ var _bid2 = _interopRequireDefault(_bid);
 var _bricole = require('../models/bricole.model');
 
 var _bricole2 = _interopRequireDefault(_bricole);
+
+var _user = require('../models/user.model');
+
+var _user2 = _interopRequireDefault(_user);
 
 var _mongoose = require('mongoose');
 
@@ -173,6 +179,265 @@ exports.default = {
                     }
                 }
             }, _callee3, _this3, [[0, 13]]);
+        }))();
+    },
+
+
+    //retrive Bid Details 
+    bidDetails: function bidDetails(req, res, next) {
+        var _this4 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+            var bidId, bidDetails;
+            return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                while (1) {
+                    switch (_context4.prev = _context4.next) {
+                        case 0:
+                            _context4.prev = 0;
+                            bidId = req.params.bidId;
+                            _context4.next = 4;
+                            return _bid2.default.findById(bidId).populate('user').populate('bricol');
+
+                        case 4:
+                            bidDetails = _context4.sent;
+
+                            if (bidDetails) {
+                                _context4.next = 7;
+                                break;
+                            }
+
+                            return _context4.abrupt('return', next(new _ApiError2.default(404)));
+
+                        case 7:
+                            console.log(bidDetails);
+                            return _context4.abrupt('return', res.status(200).json(bidDetails));
+
+                        case 11:
+                            _context4.prev = 11;
+                            _context4.t0 = _context4['catch'](0);
+
+                            next(_context4.t0);
+
+                        case 14:
+                        case 'end':
+                            return _context4.stop();
+                    }
+                }
+            }, _callee4, _this4, [[0, 11]]);
+        }))();
+    },
+
+
+    //acceppt bid 
+    accepptBid: function accepptBid(req, res, next) {
+        var _this5 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+            var bidId, bricolId, bidDetails, bricolDetails, userId;
+            return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                while (1) {
+                    switch (_context5.prev = _context5.next) {
+                        case 0:
+                            bidId = req.params.bidId;
+                            bricolId = req.params.bricolId;
+                            _context5.next = 4;
+                            return _bid2.default.findById(bidId);
+
+                        case 4:
+                            bidDetails = _context5.sent;
+
+                            if (bidDetails) {
+                                _context5.next = 7;
+                                break;
+                            }
+
+                            return _context5.abrupt('return', next(new _ApiError2.default(404)));
+
+                        case 7:
+                            _context5.next = 9;
+                            return _bricole2.default.findById(bricolId);
+
+                        case 9:
+                            bricolDetails = _context5.sent;
+
+                            if (bricolDetails) {
+                                _context5.next = 12;
+                                break;
+                            }
+
+                            return _context5.abrupt('return', next(new _ApiError2.default(404)));
+
+                        case 12:
+                            userId = req.user._id;
+
+                            if (userId == bricolDetails.user) {
+                                _context5.next = 15;
+                                break;
+                            }
+
+                            return _context5.abrupt('return', next(new _ApiError2.default(403, 'not access to this resource')));
+
+                        case 15:
+                            //update bricol details 
+                            bricolDetails.status = "assigned";
+                            bricolDetails.bricoler = bidDetails.user;
+                            _context5.next = 19;
+                            return bricolDetails.save();
+
+                        case 19:
+                            console.log(bricolDetails.bricoler);
+                            //update bid 
+                            bidDetails.status = 'accepted';
+                            _context5.next = 23;
+                            return bidDetails.save();
+
+                        case 23:
+                            return _context5.abrupt('return', res.status(204).end());
+
+                        case 24:
+                        case 'end':
+                            return _context5.stop();
+                    }
+                }
+            }, _callee5, _this5);
+        }))();
+    },
+
+
+    //refuse bid 
+    refuseBid: function refuseBid(req, res, next) {
+        var _this6 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+            var bidId, bricolId, bidDetails, bricolDetails, userId;
+            return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                while (1) {
+                    switch (_context6.prev = _context6.next) {
+                        case 0:
+                            bidId = req.params.bidId;
+                            bricolId = req.params.bricolId;
+                            _context6.next = 4;
+                            return _bid2.default.findById(bidId);
+
+                        case 4:
+                            bidDetails = _context6.sent;
+
+                            if (bidDetails) {
+                                _context6.next = 7;
+                                break;
+                            }
+
+                            return _context6.abrupt('return', next(new _ApiError2.default(404)));
+
+                        case 7:
+                            _context6.next = 9;
+                            return _bricole2.default.findById(bricolId);
+
+                        case 9:
+                            bricolDetails = _context6.sent;
+
+                            if (bricolDetails) {
+                                _context6.next = 12;
+                                break;
+                            }
+
+                            return _context6.abrupt('return', next(new _ApiError2.default(404)));
+
+                        case 12:
+                            userId = req.user._id;
+
+                            if (userId == bricolDetails.user) {
+                                _context6.next = 15;
+                                break;
+                            }
+
+                            return _context6.abrupt('return', next(new _ApiError2.default(403, 'not access to this resource')));
+
+                        case 15:
+                            //update bid 
+                            bidDetails.status = 'refused';
+                            _context6.next = 18;
+                            return bidDetails.save();
+
+                        case 18:
+                            return _context6.abrupt('return', res.status(204).end());
+
+                        case 19:
+                        case 'end':
+                            return _context6.stop();
+                    }
+                }
+            }, _callee6, _this6);
+        }))();
+    },
+
+
+    //make bricole in progress  
+    makeBricolInProgress: function makeBricolInProgress(req, res, next) {
+        var _this7 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+            var bidId, bricolId, bidDetails, bricolDetails, userId;
+            return regeneratorRuntime.wrap(function _callee7$(_context7) {
+                while (1) {
+                    switch (_context7.prev = _context7.next) {
+                        case 0:
+                            bidId = req.params.bidId;
+                            bricolId = req.params.bricolId;
+                            _context7.next = 4;
+                            return _bid2.default.findById(bidId);
+
+                        case 4:
+                            bidDetails = _context7.sent;
+
+                            if (bidDetails) {
+                                _context7.next = 7;
+                                break;
+                            }
+
+                            return _context7.abrupt('return', next(new _ApiError2.default(404)));
+
+                        case 7:
+                            _context7.next = 9;
+                            return _bricole2.default.findById(bricolId);
+
+                        case 9:
+                            bricolDetails = _context7.sent;
+
+                            if (bricolDetails) {
+                                _context7.next = 12;
+                                break;
+                            }
+
+                            return _context7.abrupt('return', next(new _ApiError2.default(404)));
+
+                        case 12:
+                            userId = req.user._id;
+
+                            console.log(typeof userId === 'undefined' ? 'undefined' : _typeof(userId));
+
+                            if (userId == bricolDetails.bricoler) {
+                                _context7.next = 16;
+                                break;
+                            }
+
+                            return _context7.abrupt('return', next(new _ApiError2.default(403, 'not access to this resource')));
+
+                        case 16:
+                            //update bricole by bricoler  
+                            bricolDetails.status = 'inProgress';
+                            _context7.next = 19;
+                            return bricolDetails.save();
+
+                        case 19:
+                            return _context7.abrupt('return', res.status(204).end());
+
+                        case 20:
+                        case 'end':
+                            return _context7.stop();
+                    }
+                }
+            }, _callee7, _this7);
         }))();
     }
 };

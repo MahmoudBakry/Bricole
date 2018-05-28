@@ -358,7 +358,7 @@ exports.default = {
                             bricolId = req.params.bricolId;
                             _context4.prev = 1;
                             _context4.next = 4;
-                            return _bricole2.default.findById(bricolId).populate('user').populate('job');
+                            return _bricole2.default.findById(bricolId).populate('user').populate('job').populate('bricoler');
 
                         case 4:
                             bricolDetails = _context4.sent;

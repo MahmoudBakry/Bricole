@@ -1,36 +1,44 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _user = require("../models/user.model");
+var _user = require('../models/user.model');
 
 var _user2 = _interopRequireDefault(_user);
 
-var _jsonwebtoken = require("jsonwebtoken");
+var _bricole = require('../models/bricole.model');
+
+var _bricole2 = _interopRequireDefault(_bricole);
+
+var _bid = require('../models/bid.model');
+
+var _bid2 = _interopRequireDefault(_bid);
+
+var _jsonwebtoken = require('jsonwebtoken');
 
 var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
 
-var _config = require("../config");
+var _config = require('../config');
 
 var _config2 = _interopRequireDefault(_config);
 
-var _check = require("express-validator/check");
+var _check = require('express-validator/check');
 
-var _mongoose = require("mongoose");
+var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
-var _ApiError = require("../helpers/ApiError");
+var _ApiError = require('../helpers/ApiError');
 
 var _ApiError2 = _interopRequireDefault(_ApiError);
 
-var _multer = require("../services/multer");
+var _multer = require('../services/multer');
 
-var _index = require("../utils/index");
+var _index = require('../utils/index');
 
-var _ApiResponse = require("../helpers/ApiResponse");
+var _ApiResponse = require('../helpers/ApiResponse');
 
 var _ApiResponse2 = _interopRequireDefault(_ApiResponse);
 
@@ -96,10 +104,10 @@ exports.default = {
                                 throw new Error('phone already exists');
 
                             case 10:
-                                return _context.abrupt("return", true);
+                                return _context.abrupt('return', true);
 
                             case 11:
-                            case "end":
+                            case 'end':
                                 return _context.stop();
                         }
                     }
@@ -129,7 +137,7 @@ exports.default = {
                                 break;
                             }
 
-                            return _context2.abrupt("return", next(new _ApiError2.default(422, validationErrors)));
+                            return _context2.abrupt('return', next(new _ApiError2.default(422, validationErrors)));
 
                         case 3:
                             _context2.prev = 3;
@@ -172,12 +180,12 @@ exports.default = {
 
                         case 22:
                             _context2.prev = 22;
-                            _context2.t0 = _context2["catch"](3);
+                            _context2.t0 = _context2['catch'](3);
 
                             next(_context2.t0);
 
                         case 25:
-                        case "end":
+                        case 'end':
                             return _context2.stop();
                     }
                 }
@@ -207,11 +215,153 @@ exports.default = {
                             res.send({ userDetails: userDetails, token: generateToken(user.id) });
 
                         case 6:
-                        case "end":
+                        case 'end':
                             return _context3.stop();
                     }
                 }
             }, _callee3, _this3);
+        }))();
+    },
+
+
+    //retrive all bricols under one user 
+    fetchAllBricolOfOneUser: function fetchAllBricolOfOneUser(req, res, next) {
+        var _this4 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+            var limit, page, userId, query, allBricols, result, x, countBids, count;
+            return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                while (1) {
+                    switch (_context4.prev = _context4.next) {
+                        case 0:
+                            _context4.prev = 0;
+
+                            console.log('s');
+                            limit = parseInt(req.query.limit) || 20;
+                            page = req.query.page || 1;
+                            userId = req.params.userId;
+                            query = {};
+
+                            if (req.query.status) query.status = req.query.status;
+                            query.user = userId;
+                            _context4.next = 10;
+                            return _bricole2.default.find(query).populate('user').populate('job').populate('bricoler').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
+
+                        case 10:
+                            allBricols = _context4.sent;
+                            result = [];
+                            x = 0;
+
+                        case 13:
+                            if (!(x < allBricols.length)) {
+                                _context4.next = 21;
+                                break;
+                            }
+
+                            _context4.next = 16;
+                            return _bid2.default.count({ bricol: allBricols[x].id });
+
+                        case 16:
+                            countBids = _context4.sent;
+
+                            result.push({ bricol: allBricols[x], countBids: countBids });
+
+                        case 18:
+                            x++;
+                            _context4.next = 13;
+                            break;
+
+                        case 21:
+                            _context4.next = 23;
+                            return _bricole2.default.count(query);
+
+                        case 23:
+                            count = _context4.sent;
+                            return _context4.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
+
+                        case 27:
+                            _context4.prev = 27;
+                            _context4.t0 = _context4['catch'](0);
+
+                            next(_context4.t0);
+
+                        case 30:
+                        case 'end':
+                            return _context4.stop();
+                    }
+                }
+            }, _callee4, _this4, [[0, 27]]);
+        }))();
+    },
+
+
+    //retrive all bricols under one bricoler 
+    fetchAllBricolOfOneBricoler: function fetchAllBricolOfOneBricoler(req, res, next) {
+        var _this5 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+            var limit, page, bricolerId, query, allBricols, result, x, countBids, count;
+            return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                while (1) {
+                    switch (_context5.prev = _context5.next) {
+                        case 0:
+                            _context5.prev = 0;
+
+                            console.log('s');
+                            limit = parseInt(req.query.limit) || 20;
+                            page = req.query.page || 1;
+                            bricolerId = req.params.bricolerId;
+                            query = {};
+
+                            if (req.query.status) query.status = req.query.status;
+                            query.bricoler = bricolerId;
+                            _context5.next = 10;
+                            return _bricole2.default.find(query).populate('user').populate('job').populate('bricoler').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
+
+                        case 10:
+                            allBricols = _context5.sent;
+                            result = [];
+                            x = 0;
+
+                        case 13:
+                            if (!(x < allBricols.length)) {
+                                _context5.next = 21;
+                                break;
+                            }
+
+                            _context5.next = 16;
+                            return _bid2.default.count({ bricol: allBricols[x].id });
+
+                        case 16:
+                            countBids = _context5.sent;
+
+                            result.push({ bricol: allBricols[x], countBids: countBids });
+
+                        case 18:
+                            x++;
+                            _context5.next = 13;
+                            break;
+
+                        case 21:
+                            _context5.next = 23;
+                            return _bricole2.default.count(query);
+
+                        case 23:
+                            count = _context5.sent;
+                            return _context5.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
+
+                        case 27:
+                            _context5.prev = 27;
+                            _context5.t0 = _context5['catch'](0);
+
+                            next(_context5.t0);
+
+                        case 30:
+                        case 'end':
+                            return _context5.stop();
+                    }
+                }
+            }, _callee5, _this5, [[0, 27]]);
         }))();
     }
 };

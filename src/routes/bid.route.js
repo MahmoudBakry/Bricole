@@ -5,6 +5,9 @@ import passport from "passport";
 const requireAuth = passport.authenticate('jwt', { session: false });
 const router = express.Router();
 
+router.route('/bids/:bidId')
+    .get(BidController.bidDetails)
+
 router.route('/bricoles/:bricolId/bids')
     .post(requireAuth,
     BidController.validateBody(),
@@ -13,5 +16,6 @@ router.route('/bricoles/:bricolId/bids')
 
 router.route('/bricoles/:bricolId/bids-count')
     .get(requireAuth, BidController.countNumberOfBidToONeBricol)
+
 
 export default router;

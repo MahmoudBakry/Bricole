@@ -22,7 +22,7 @@ var BidSchema = new _mongoose.Schema({
     },
     bricol: {
         type: Number,
-        ref: 'bricil',
+        ref: 'bricol',
         required: true
     },
     offerDescription: {

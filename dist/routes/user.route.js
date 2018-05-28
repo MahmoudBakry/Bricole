@@ -32,5 +32,9 @@ router.route('/signup').post((0, _multer.multerSaveTo)('users').single('img'), _
 
 router.post("/signin", requireSignIn, _user2.default.signin);
 
+router.route('/users/:userId/bricols').get(requireAuth, _user2.default.fetchAllBricolOfOneUser);
+
+router.route('/bricolers/:bricolerId/bricols').get(requireAuth, _user2.default.fetchAllBricolOfOneBricoler);
+
 exports.default = router;
 //# sourceMappingURL=user.route.js.map

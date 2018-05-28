@@ -204,6 +204,7 @@ export default {
             let bricolDetails = await Bricol.findById(bricolId)
                 .populate('user')
                 .populate('job')
+                .populate('bricoler')
 
             if (!bricolDetails)
                 return res.status(404).end();

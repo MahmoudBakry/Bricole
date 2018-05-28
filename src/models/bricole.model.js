@@ -66,6 +66,15 @@ const BricolSchema = new Schema({
         type: String,
         enum: ['fixed', 'monthly', 'weekly']
     },
+    bricoler: {
+        type: Number,
+        ref: 'user'
+    },
+    status: {
+        type: String,
+        enum: ['pendding', 'assigned', 'inProgress', 'done'],
+        default: 'pendding'
+    },
     creationDate: {
         type: Date,
         default: Date.now
@@ -86,4 +95,4 @@ BricolSchema.plugin(autoIncrement.plugin, {
     startAt: 1,
 });
 
-export default mongoose.model("bricil", BricolSchema);
+export default mongoose.model("bricol", BricolSchema);

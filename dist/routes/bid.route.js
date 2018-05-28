@@ -23,6 +23,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var requireAuth = _passport2.default.authenticate('jwt', { session: false });
 var router = _express2.default.Router();
 
+router.route('/bids/:bidId').get(_bid2.default.bidDetails);
+
 router.route('/bricoles/:bricolId/bids').post(requireAuth, _bid2.default.validateBody(), _bid2.default.createNewBid).get(requireAuth, _bid2.default.retriveAllBidsForBricol);
 
 router.route('/bricoles/:bricolId/bids-count').get(requireAuth, _bid2.default.countNumberOfBidToONeBricol);
