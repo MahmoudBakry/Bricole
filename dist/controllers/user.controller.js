@@ -198,21 +198,21 @@ exports.default = {
         var _this3 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-            var user, userDetails;
+            var userDetails, user;
             return regeneratorRuntime.wrap(function _callee3$(_context3) {
                 while (1) {
                     switch (_context3.prev = _context3.next) {
                         case 0:
-                            user = req.user; // Passport
+                            userDetails = req.user; // Passport
 
-                            console.log(user.type);
+                            console.log(userDetails.type);
                             _context3.next = 4;
-                            return _user2.default.findById(user.id).populate('city').populate('jobs');
+                            return _user2.default.findById(userDetails.id).populate('city').populate('jobs');
 
                         case 4:
-                            userDetails = _context3.sent;
+                            user = _context3.sent;
 
-                            res.send({ userDetails: userDetails, token: generateToken(user.id) });
+                            res.send({ user: user, token: generateToken(userDetails.id) });
 
                         case 6:
                         case 'end':

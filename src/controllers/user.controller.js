@@ -90,12 +90,12 @@ export default {
     },
     //sign in logic 
     async signin(req, res, next) {
-        let user = req.user; // Passport
-        console.log(user.type)
-        let userDetails = await User.findById(user.id)
+        let userDetails = req.user; // Passport
+        console.log(userDetails.type)
+        let user = await User.findById(userDetails.id)
             .populate('city')
             .populate('jobs')
-        res.send({ userDetails, token: generateToken(user.id) });
+        res.send({ user, token: generateToken(userDetails.id) });
     },
 
     //retrive all bricols under one user 
