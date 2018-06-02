@@ -159,7 +159,7 @@ exports.default = {
         var _this2 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var _req$query, vehicleToWork, jobs, bricolerGender, startPrice, endPrice, query, matchQueryRegx, sort, limit, page, allDocs, userLocation, result, x, bricolLocationToDistance, lang1, lat1, lang2, lat2, R, dLat, dLon, a, c, d, countOfBids, count;
+            var _req$query, vehicleToWork, jobs, bricolerGender, startPrice, endPrice, query, matchQueryRegx, sort, limit, page, allDocs, userLocation, result, x, bricolLocationToDistance, lang1, lat1, lang2, lat2, R, dLat, dLon, a, c, d, bidQuery, countOfBids, count;
 
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
@@ -194,21 +194,21 @@ exports.default = {
                             //sorted docs
                             sort = {};
 
+                            sort.creationDate = -1;
                             if (req.query.maxPrice) {
                                 sort.budget = -1;
-                                sort.creationDate = -1;
                             }
 
                             if (req.query.minPrice) {
                                 sort.budget = 1;
-                                sort.creationDate = -1;
                             }
+
                             limit = parseInt(req.query.limit) || 20;
                             page = req.query.page || 1;
-                            _context2.next = 16;
+                            _context2.next = 17;
                             return _bricole2.default.find(query).populate('user').populate('job').skip((page - 1) * limit).limit(limit).sort(sort);
 
-                        case 16:
+                        case 17:
                             allDocs = _context2.sent;
 
 
@@ -219,9 +219,9 @@ exports.default = {
                             result = [];
                             x = 0;
 
-                        case 20:
+                        case 21:
                             if (!(x < allDocs.length)) {
-                                _context2.next = 40;
+                                _context2.next = 42;
                                 break;
                             }
 
@@ -249,39 +249,43 @@ exports.default = {
 
                             //get count of bids for each bricol
 
-                            _context2.next = 35;
-                            return _bid2.default.count({ bricol: allDocs[x].id });
+                            bidQuery = {
+                                bricol: allDocs[x].id,
+                                bidType: 'inCity'
+                            };
+                            _context2.next = 37;
+                            return _bid2.default.count(bidQuery);
 
-                        case 35:
+                        case 37:
                             countOfBids = _context2.sent;
 
                             result.push({ bricol: allDocs[x], distanceInKm: d, countOfBids: countOfBids });
 
-                        case 37:
+                        case 39:
                             x++;
-                            _context2.next = 20;
+                            _context2.next = 21;
                             break;
 
-                        case 40:
-                            _context2.next = 42;
+                        case 42:
+                            _context2.next = 44;
                             return _bricole2.default.count(query);
 
-                        case 42:
+                        case 44:
                             count = _context2.sent;
                             return _context2.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 46:
-                            _context2.prev = 46;
+                        case 48:
+                            _context2.prev = 48;
                             _context2.t0 = _context2['catch'](0);
 
                             next(_context2.t0);
 
-                        case 49:
+                        case 51:
                         case 'end':
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2, [[0, 46]]);
+            }, _callee2, _this2, [[0, 48]]);
         }))();
     },
 

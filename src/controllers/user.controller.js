@@ -119,7 +119,10 @@ export default {
 
             let result = []
             for (let x = 0; x < allBricols.length; x++) {
-                let countBids = await Bid.count({ bricol: allBricols[x].id });
+                let query = {}
+                query.bricol = allBricols[x].id;
+                query.bidType = 'inCity'
+                let countBids = await Bid.count(query);
                 result.push({ bricol: allBricols[x], countBids: countBids })
             }
 
@@ -159,7 +162,10 @@ export default {
 
             let result = []
             for (let x = 0; x < allBricols.length; x++) {
-                let countBids = await Bid.count({ bricol: allBricols[x].id });
+                let query = {}
+                query.bricol = allBricols[x].id;
+                query.bidType = 'inCity'
+                let countBids = await Bid.count(query);
                 result.push({ bricol: allBricols[x], countBids: countBids })
             }
 

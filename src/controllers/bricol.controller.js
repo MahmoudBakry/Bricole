@@ -98,15 +98,15 @@ export default {
 
             //sorted docs
             let sort = {}
+            sort.creationDate = -1;
             if (req.query.maxPrice) {
                 sort.budget = -1;
-                sort.creationDate = -1;
             }
 
             if (req.query.minPrice) {
                 sort.budget = 1;
-                sort.creationDate = -1;
             }
+
             const limit = parseInt(req.query.limit) || 20;
             const page = req.query.page || 1;
 
@@ -145,7 +145,11 @@ export default {
                 //console.log(d)
 
                 //get count of bids for each bricol
-                let countOfBids = await Bid.count({ bricol: allDocs[x].id })
+                let bidQuery = {
+                    bricol: allDocs[x].id, 
+                    bidType : 'inCity'
+                }
+                let countOfBids = await Bid.count(bidQuery)
                 result.push({ bricol: allDocs[x], distanceInKm: d, countOfBids })
             }
 
@@ -215,6 +219,6 @@ export default {
             next(err)
         }
     },
-   
+
 }
 

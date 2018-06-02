@@ -229,7 +229,8 @@ exports.default = {
         var _this4 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-            var limit, page, userId, query, allBricols, result, x, countBids, count;
+            var limit, page, userId, query, allBricols, result, x, _query, countBids, count;
+
             return regeneratorRuntime.wrap(function _callee4$(_context4) {
                 while (1) {
                     switch (_context4.prev = _context4.next) {
@@ -254,43 +255,47 @@ exports.default = {
 
                         case 13:
                             if (!(x < allBricols.length)) {
-                                _context4.next = 21;
+                                _context4.next = 24;
                                 break;
                             }
 
-                            _context4.next = 16;
-                            return _bid2.default.count({ bricol: allBricols[x].id });
+                            _query = {};
 
-                        case 16:
+                            _query.bricol = allBricols[x].id;
+                            _query.bidType = 'inCity';
+                            _context4.next = 19;
+                            return _bid2.default.count(_query);
+
+                        case 19:
                             countBids = _context4.sent;
 
                             result.push({ bricol: allBricols[x], countBids: countBids });
 
-                        case 18:
+                        case 21:
                             x++;
                             _context4.next = 13;
                             break;
 
-                        case 21:
-                            _context4.next = 23;
+                        case 24:
+                            _context4.next = 26;
                             return _bricole2.default.count(query);
 
-                        case 23:
+                        case 26:
                             count = _context4.sent;
                             return _context4.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 27:
-                            _context4.prev = 27;
+                        case 30:
+                            _context4.prev = 30;
                             _context4.t0 = _context4['catch'](0);
 
                             next(_context4.t0);
 
-                        case 30:
+                        case 33:
                         case 'end':
                             return _context4.stop();
                     }
                 }
-            }, _callee4, _this4, [[0, 27]]);
+            }, _callee4, _this4, [[0, 30]]);
         }))();
     },
 
@@ -300,7 +305,8 @@ exports.default = {
         var _this5 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
-            var limit, page, bricolerId, query, allBricols, result, x, countBids, count;
+            var limit, page, bricolerId, query, allBricols, result, x, _query2, countBids, count;
+
             return regeneratorRuntime.wrap(function _callee5$(_context5) {
                 while (1) {
                     switch (_context5.prev = _context5.next) {
@@ -325,43 +331,47 @@ exports.default = {
 
                         case 13:
                             if (!(x < allBricols.length)) {
-                                _context5.next = 21;
+                                _context5.next = 24;
                                 break;
                             }
 
-                            _context5.next = 16;
-                            return _bid2.default.count({ bricol: allBricols[x].id });
+                            _query2 = {};
 
-                        case 16:
+                            _query2.bricol = allBricols[x].id;
+                            _query2.bidType = 'inCity';
+                            _context5.next = 19;
+                            return _bid2.default.count(_query2);
+
+                        case 19:
                             countBids = _context5.sent;
 
                             result.push({ bricol: allBricols[x], countBids: countBids });
 
-                        case 18:
+                        case 21:
                             x++;
                             _context5.next = 13;
                             break;
 
-                        case 21:
-                            _context5.next = 23;
+                        case 24:
+                            _context5.next = 26;
                             return _bricole2.default.count(query);
 
-                        case 23:
+                        case 26:
                             count = _context5.sent;
                             return _context5.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 27:
-                            _context5.prev = 27;
+                        case 30:
+                            _context5.prev = 30;
                             _context5.t0 = _context5['catch'](0);
 
                             next(_context5.t0);
 
-                        case 30:
+                        case 33:
                         case 'end':
                             return _context5.stop();
                     }
                 }
-            }, _callee5, _this5, [[0, 27]]);
+            }, _callee5, _this5, [[0, 30]]);
         }))();
     }
 };

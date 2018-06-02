@@ -24,6 +24,14 @@ var _bid = require('./bid.route');
 
 var _bid2 = _interopRequireDefault(_bid);
 
+var _bricolBtCities = require('./bricol-bt-cities.routes');
+
+var _bricolBtCities2 = _interopRequireDefault(_bricolBtCities);
+
+var _bidBricolBtCity = require('./bid-bricol-bt-city.route');
+
+var _bidBricolBtCity2 = _interopRequireDefault(_bidBricolBtCity);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -43,5 +51,9 @@ router.use('/cities', _city2.default);
 
 router.use('/bricoles', requireAuth, _bricol2.default);
 router.use('/', _bid2.default);
+
+router.use('/bricoles-cities', requireAuth, _bricolBtCities2.default);
+router.use('/', _bidBricolBtCity2.default);
+
 exports.default = router;
 //# sourceMappingURL=index.js.map

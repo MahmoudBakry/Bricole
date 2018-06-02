@@ -28,6 +28,7 @@ export default {
 
             let bricolId = req.params.bricolId;
             req.body.bricol = bricolId;
+            req.body.bidType = 'inCity';
             let newBid = await Bid.create(req.body);
             return res.status(201).json(newBid);
         } catch (err) {
@@ -41,11 +42,14 @@ export default {
             const limit = parseInt(req.query.limit) || 20;
             const page = req.query.page || 1;
             let bricolId = req.params.bricolId;
-            let allDocs = await Bid.find({ bricol: bricolId })
+            let query = {}
+            query.bricol = bricolId;
+            query.bidType = 'inCity';
+            let allDocs = await Bid.find(query)
                 .populate('user')
                 .populate('bricol').skip((page - 1) * limit)
                 .limit(limit).sort({ creationDate: -1 })
-            let count = await Bid.count({ bricol: bricolId });
+            let count = await Bid.count(query);
 
             return res.send(new ApiResponse(
                 allDocs,
@@ -65,6 +69,9 @@ export default {
     async countNumberOfBidToONeBricol(req, res, next) {
         try {
             let bricolId = req.params.bricolId;
+            let query = {};
+            query.bricol = bricolId;
+            query.bidType = 'inCity'
             let bricolDetails = await Bricol.findById(bricolId);
             if (!bricolDetails)
                 return res.status(404).end();

@@ -69,25 +69,26 @@ exports.default = {
                             bricolId = req.params.bricolId;
 
                             req.body.bricol = bricolId;
-                            _context.next = 8;
+                            req.body.bidType = 'inCity';
+                            _context.next = 9;
                             return _bid2.default.create(req.body);
 
-                        case 8:
+                        case 9:
                             newBid = _context.sent;
                             return _context.abrupt('return', res.status(201).json(newBid));
 
-                        case 12:
-                            _context.prev = 12;
+                        case 13:
+                            _context.prev = 13;
                             _context.t0 = _context['catch'](0);
 
                             next(_context.t0);
 
-                        case 15:
+                        case 16:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 12]]);
+            }, _callee, _this, [[0, 13]]);
         }))();
     },
 
@@ -97,7 +98,7 @@ exports.default = {
         var _this2 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var limit, page, bricolId, allDocs, count;
+            var limit, page, bricolId, query, allDocs, count;
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -106,30 +107,34 @@ exports.default = {
                             limit = parseInt(req.query.limit) || 20;
                             page = req.query.page || 1;
                             bricolId = req.params.bricolId;
-                            _context2.next = 6;
-                            return _bid2.default.find({ bricol: bricolId }).populate('user').populate('bricol').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
+                            query = {};
 
-                        case 6:
-                            allDocs = _context2.sent;
+                            query.bricol = bricolId;
+                            query.bidType = 'inCity';
                             _context2.next = 9;
-                            return _bid2.default.count({ bricol: bricolId });
+                            return _bid2.default.find(query).populate('user').populate('bricol').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
 
                         case 9:
+                            allDocs = _context2.sent;
+                            _context2.next = 12;
+                            return _bid2.default.count(query);
+
+                        case 12:
                             count = _context2.sent;
                             return _context2.abrupt('return', res.send(new _ApiResponse2.default(allDocs, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 13:
-                            _context2.prev = 13;
+                        case 16:
+                            _context2.prev = 16;
                             _context2.t0 = _context2['catch'](0);
 
                             next(_context2.t0);
 
-                        case 16:
+                        case 19:
                         case 'end':
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2, [[0, 13]]);
+            }, _callee2, _this2, [[0, 16]]);
         }))();
     },
 
@@ -139,46 +144,50 @@ exports.default = {
         var _this3 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-            var bricolId, bricolDetails, count;
+            var bricolId, query, bricolDetails, count;
             return regeneratorRuntime.wrap(function _callee3$(_context3) {
                 while (1) {
                     switch (_context3.prev = _context3.next) {
                         case 0:
                             _context3.prev = 0;
                             bricolId = req.params.bricolId;
-                            _context3.next = 4;
+                            query = {};
+
+                            query.bricol = bricolId;
+                            query.bidType = 'inCity';
+                            _context3.next = 7;
                             return _bricole2.default.findById(bricolId);
 
-                        case 4:
+                        case 7:
                             bricolDetails = _context3.sent;
 
                             if (bricolDetails) {
-                                _context3.next = 7;
+                                _context3.next = 10;
                                 break;
                             }
 
                             return _context3.abrupt('return', res.status(404).end());
 
-                        case 7:
-                            _context3.next = 9;
+                        case 10:
+                            _context3.next = 12;
                             return _bid2.default.count({ bricol: bricolId });
 
-                        case 9:
+                        case 12:
                             count = _context3.sent;
                             return _context3.abrupt('return', res.status(200).json({ count: count }));
 
-                        case 13:
-                            _context3.prev = 13;
+                        case 16:
+                            _context3.prev = 16;
                             _context3.t0 = _context3['catch'](0);
 
                             next(_context3.t0);
 
-                        case 16:
+                        case 19:
                         case 'end':
                             return _context3.stop();
                     }
                 }
-            }, _callee3, _this3, [[0, 13]]);
+            }, _callee3, _this3, [[0, 16]]);
         }))();
     },
 

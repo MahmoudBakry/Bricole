@@ -7,9 +7,13 @@ const BidSchema = new Schema({
         required: true,
         ref: 'user'
     },
+    bidType : {
+        type : String, 
+        enum: ['inCity', 'betweenCity'] 
+    },
     bricol: {
         type: Number,
-        ref: 'bricol',
+        refPath: 'bidType',
         required: true
     },
     offerDescription: {
