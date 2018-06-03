@@ -28,7 +28,7 @@ export default {
 
             let bricolId = req.params.bricolId;
             req.body.bricol = bricolId;
-            req.body.bidType = 'inCity';
+            req.body.bidType = 'bricol';
             let newBid = await Bid.create(req.body);
             return res.status(201).json(newBid);
         } catch (err) {
@@ -44,7 +44,7 @@ export default {
             let bricolId = req.params.bricolId;
             let query = {}
             query.bricol = bricolId;
-            query.bidType = 'inCity';
+            query.bidType = 'bricol';
             let allDocs = await Bid.find(query)
                 .populate('user')
                 .populate('bricol').skip((page - 1) * limit)
@@ -71,7 +71,7 @@ export default {
             let bricolId = req.params.bricolId;
             let query = {};
             query.bricol = bricolId;
-            query.bidType = 'inCity'
+            query.bidType = 'bricol'
             let bricolDetails = await Bricol.findById(bricolId);
             if (!bricolDetails)
                 return res.status(404).end();

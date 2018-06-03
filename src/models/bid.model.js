@@ -9,7 +9,7 @@ const BidSchema = new Schema({
     },
     bidType : {
         type : String, 
-        enum: ['inCity', 'betweenCity'] 
+        enum: ['bricol', 'bricol-bt-cities'] 
     },
     bricol: {
         type: Number,

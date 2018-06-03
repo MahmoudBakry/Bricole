@@ -69,7 +69,7 @@ exports.default = {
                             bricolId = req.params.bricolId;
 
                             req.body.bricol = bricolId;
-                            req.body.bidType = 'inCity';
+                            req.body.bidType = 'bricol';
                             _context.next = 9;
                             return _bid2.default.create(req.body);
 
@@ -110,7 +110,7 @@ exports.default = {
                             query = {};
 
                             query.bricol = bricolId;
-                            query.bidType = 'inCity';
+                            query.bidType = 'bricol';
                             _context2.next = 9;
                             return _bid2.default.find(query).populate('user').populate('bricol').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
 
@@ -154,7 +154,7 @@ exports.default = {
                             query = {};
 
                             query.bricol = bricolId;
-                            query.bidType = 'inCity';
+                            query.bidType = 'bricol';
                             _context3.next = 7;
                             return _bricole2.default.findById(bricolId);
 

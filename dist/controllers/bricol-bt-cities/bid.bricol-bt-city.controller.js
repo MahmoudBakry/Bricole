@@ -66,7 +66,7 @@ exports.default = {
                             bricolId = req.params.bricolId;
 
                             req.body.bricol = bricolId;
-                            req.body.bidType = 'betweenCity';
+                            req.body.bidType = 'bricol-bt-cities';
                             _context.next = 9;
                             return _bid2.default.create(req.body);
 

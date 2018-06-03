@@ -28,7 +28,7 @@ export default {
 
             let bricolId = req.params.bricolId;
             req.body.bricol = bricolId;
-            req.body.bidType = 'betweenCity';
+            req.body.bidType = 'bricol-bt-cities';
             let newBid = await Bid.create(req.body);
             return res.status(201).json(newBid);
         } catch (err) {
