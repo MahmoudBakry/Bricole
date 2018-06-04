@@ -263,7 +263,7 @@ exports.default = {
                             //get count of bids for each bricol
                             bidQuery = {
                                 bricol: allDocs[x].id,
-                                bidType: 'betweenCity'
+                                bidType: 'bricol-bt-cities'
                             };
                             _context3.next = 23;
                             return _bid2.default.count(bidQuery);

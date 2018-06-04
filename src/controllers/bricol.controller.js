@@ -147,7 +147,7 @@ export default {
                 //get count of bids for each bricol
                 let bidQuery = {
                     bricol: allDocs[x].id, 
-                    bidType : 'inCity'
+                    bidType : 'bricol'
                 }
                 let countOfBids = await Bid.count(bidQuery)
                 result.push({ bricol: allDocs[x], distanceInKm: d, countOfBids })

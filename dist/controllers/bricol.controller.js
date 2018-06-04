@@ -251,7 +251,7 @@ exports.default = {
 
                             bidQuery = {
                                 bricol: allDocs[x].id,
-                                bidType: 'inCity'
+                                bidType: 'bricol'
                             };
                             _context2.next = 37;
                             return _bid2.default.count(bidQuery);
