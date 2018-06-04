@@ -72,7 +72,7 @@ exports.default = {
                                 bidType: 'bricol'
                             };
                             _context.next = 7;
-                            return _bid2.default.find(query);
+                            return _bid2.default.findOne(query);
 
                         case 7:
                             bidExist = _context.sent;

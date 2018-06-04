@@ -30,7 +30,7 @@ export default {
                 bricol: req.params.bricolId,
                 bidType : 'bricol'
             }
-            let bidExist = await Bid.find(query);
+            let bidExist = await Bid.findOne(query);
             if (bidExist)
                 return next(new ApiError(400, 'you have already bid before in the same bricol'));
 
