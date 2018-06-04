@@ -28,11 +28,14 @@ export default {
             let query = {
                 user: req.body.user,
                 bricol: req.params.bricolId,
-                bidType : 'bricol'
+                bidType: 'bricol'
             }
             let bidExist = await Bid.findOne(query);
-            if (bidExist)
+            if (bidExist) {
+                console.log(bidExist)
                 return next(new ApiError(400, 'you have already bid before in the same bricol'));
+            }
+
 
             let bricolId = req.params.bricolId;
             req.body.bricol = bricolId;

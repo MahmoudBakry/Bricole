@@ -78,36 +78,37 @@ exports.default = {
                             bidExist = _context.sent;
 
                             if (!bidExist) {
-                                _context.next = 10;
+                                _context.next = 11;
                                 break;
                             }
 
+                            console.log(bidExist);
                             return _context.abrupt('return', next(new _ApiError2.default(400, 'you have already bid before in the same bricol')));
 
-                        case 10:
+                        case 11:
                             bricolId = req.params.bricolId;
 
                             req.body.bricol = bricolId;
                             req.body.bidType = 'bricol';
-                            _context.next = 15;
+                            _context.next = 16;
                             return _bid2.default.create(req.body);
 
-                        case 15:
+                        case 16:
                             newBid = _context.sent;
                             return _context.abrupt('return', res.status(201).json(newBid));
 
-                        case 19:
-                            _context.prev = 19;
+                        case 20:
+                            _context.prev = 20;
                             _context.t0 = _context['catch'](0);
 
                             next(_context.t0);
 
-                        case 22:
+                        case 23:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 19]]);
+            }, _callee, _this, [[0, 20]]);
         }))();
     },
 
