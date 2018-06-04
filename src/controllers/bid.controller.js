@@ -25,6 +25,14 @@ export default {
             const validationErrors = validationResult(req).array();
             if (validationErrors.length > 0)
                 return next(new ApiError(422, validationErrors));
+            let query = {
+                user: req.body.user,
+                bricol: req.params.bricolId,
+                bidType : 'bricol'
+            }
+            let bidExist = await Bid.find(query);
+            if (bidExist)
+                return next(new ApiError(400, 'you have already bid before in the same bricol'));
 
             let bricolId = req.params.bricolId;
             req.body.bricol = bricolId;

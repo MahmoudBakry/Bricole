@@ -50,7 +50,7 @@ exports.default = {
         var _this = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var validationErrors, bricolId, newBid;
+            var validationErrors, query, bidExist, bricolId, newBid;
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
@@ -66,29 +66,48 @@ exports.default = {
                             return _context.abrupt('return', next(new _ApiError2.default(422, validationErrors)));
 
                         case 4:
+                            query = {
+                                user: req.body.user,
+                                bricol: req.params.bricolId,
+                                bidType: 'bricol'
+                            };
+                            _context.next = 7;
+                            return _bid2.default.find(query);
+
+                        case 7:
+                            bidExist = _context.sent;
+
+                            if (!bidExist) {
+                                _context.next = 10;
+                                break;
+                            }
+
+                            return _context.abrupt('return', next(new _ApiError2.default(400, 'you have already bid before in the same bricol')));
+
+                        case 10:
                             bricolId = req.params.bricolId;
 
                             req.body.bricol = bricolId;
                             req.body.bidType = 'bricol';
-                            _context.next = 9;
+                            _context.next = 15;
                             return _bid2.default.create(req.body);
 
-                        case 9:
+                        case 15:
                             newBid = _context.sent;
                             return _context.abrupt('return', res.status(201).json(newBid));
 
-                        case 13:
-                            _context.prev = 13;
+                        case 19:
+                            _context.prev = 19;
                             _context.t0 = _context['catch'](0);
 
                             next(_context.t0);
 
-                        case 16:
+                        case 22:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 13]]);
+            }, _callee, _this, [[0, 19]]);
         }))();
     },
 
