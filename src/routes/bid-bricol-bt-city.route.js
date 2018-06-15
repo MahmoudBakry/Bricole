@@ -10,6 +10,8 @@ router.route('/bricoles-cities/:bricolId/bids')
     .post(requireAuth,
     BidController.validateBody(),
     BidController.createNewBid)
- 
+    .get(requireAuth, BidController.retriveAllBidsOfOneBricole)
+
+
 
 export default router;

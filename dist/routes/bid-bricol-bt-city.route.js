@@ -23,7 +23,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var requireAuth = _passport2.default.authenticate('jwt', { session: false });
 var router = _express2.default.Router();
 
-router.route('/bricoles-cities/:bricolId/bids').post(requireAuth, _bidBricolBtCity2.default.validateBody(), _bidBricolBtCity2.default.createNewBid);
+router.route('/bricoles-cities/:bricolId/bids').post(requireAuth, _bidBricolBtCity2.default.validateBody(), _bidBricolBtCity2.default.createNewBid).get(requireAuth, _bidBricolBtCity2.default.retriveAllBidsOfOneBricole);
 
 exports.default = router;
 //# sourceMappingURL=bid-bricol-bt-city.route.js.map

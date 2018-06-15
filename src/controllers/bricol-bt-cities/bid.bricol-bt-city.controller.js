@@ -36,4 +36,34 @@ export default {
         }
     },
 
+    //retrive all bids under one bricole 
+    async retriveAllBidsOfOneBricole(req, res, next) {
+        try {
+            const limit = parseInt(req.query.limit) || 20;
+            const page = req.query.page || 1;
+            let bricolId = req.params.bricolId;
+            let query = {}
+            query.bricol = bricolId;
+            query.bidType = 'bricol-bt-cities';
+
+            let allDocs = await Bid.find(query)
+                .populate('user')
+                .populate('bricol').skip((page - 1) * limit)
+                .limit(limit).sort({ creationDate: -1 })
+            let count = await Bid.count(query);
+
+            return res.send(new ApiResponse(
+                allDocs,
+                page,
+                Math.ceil(count / limit),
+                limit,
+                count,
+                req
+            ))
+        } catch (err) {
+            next(err)
+        }
+    },
+
+
 }

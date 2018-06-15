@@ -191,6 +191,9 @@ exports.default = {
                                 query.title = matchQueryRegx;
                             }
 
+                            //filter only pendding bricole 
+                            query.status = "pendding";
+
                             //sorted docs
                             sort = {};
 
@@ -205,10 +208,10 @@ exports.default = {
 
                             limit = parseInt(req.query.limit) || 20;
                             page = req.query.page || 1;
-                            _context2.next = 17;
+                            _context2.next = 18;
                             return _bricole2.default.find(query).populate('user').populate('job').skip((page - 1) * limit).limit(limit).sort(sort);
 
-                        case 17:
+                        case 18:
                             allDocs = _context2.sent;
 
 
@@ -219,9 +222,9 @@ exports.default = {
                             result = [];
                             x = 0;
 
-                        case 21:
+                        case 22:
                             if (!(x < allDocs.length)) {
-                                _context2.next = 42;
+                                _context2.next = 43;
                                 break;
                             }
 
@@ -253,39 +256,39 @@ exports.default = {
                                 bricol: allDocs[x].id,
                                 bidType: 'bricol'
                             };
-                            _context2.next = 37;
+                            _context2.next = 38;
                             return _bid2.default.count(bidQuery);
 
-                        case 37:
+                        case 38:
                             countOfBids = _context2.sent;
 
                             result.push({ bricol: allDocs[x], distanceInKm: d, countOfBids: countOfBids });
 
-                        case 39:
+                        case 40:
                             x++;
-                            _context2.next = 21;
+                            _context2.next = 22;
                             break;
 
-                        case 42:
-                            _context2.next = 44;
+                        case 43:
+                            _context2.next = 45;
                             return _bricole2.default.count(query);
 
-                        case 44:
+                        case 45:
                             count = _context2.sent;
                             return _context2.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 48:
-                            _context2.prev = 48;
+                        case 49:
+                            _context2.prev = 49;
                             _context2.t0 = _context2['catch'](0);
 
                             next(_context2.t0);
 
-                        case 51:
+                        case 52:
                         case 'end':
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2, [[0, 48]]);
+            }, _callee2, _this2, [[0, 49]]);
         }))();
     },
 

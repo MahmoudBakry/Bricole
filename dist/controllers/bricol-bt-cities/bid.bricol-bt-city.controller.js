@@ -87,6 +87,53 @@ exports.default = {
                 }
             }, _callee, _this, [[0, 13]]);
         }))();
+    },
+
+
+    //retrive all bids under one bricole 
+    retriveAllBidsOfOneBricole: function retriveAllBidsOfOneBricole(req, res, next) {
+        var _this2 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+            var limit, page, bricolId, query, allDocs, count;
+            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                while (1) {
+                    switch (_context2.prev = _context2.next) {
+                        case 0:
+                            _context2.prev = 0;
+                            limit = parseInt(req.query.limit) || 20;
+                            page = req.query.page || 1;
+                            bricolId = req.params.bricolId;
+                            query = {};
+
+                            query.bricol = bricolId;
+                            query.bidType = 'bricol-bt-cities';
+
+                            _context2.next = 9;
+                            return _bid2.default.find(query).populate('user').populate('bricol').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
+
+                        case 9:
+                            allDocs = _context2.sent;
+                            _context2.next = 12;
+                            return _bid2.default.count(query);
+
+                        case 12:
+                            count = _context2.sent;
+                            return _context2.abrupt('return', res.send(new _ApiResponse2.default(allDocs, page, Math.ceil(count / limit), limit, count, req)));
+
+                        case 16:
+                            _context2.prev = 16;
+                            _context2.t0 = _context2['catch'](0);
+
+                            next(_context2.t0);
+
+                        case 19:
+                        case 'end':
+                            return _context2.stop();
+                    }
+                }
+            }, _callee2, _this2, [[0, 16]]);
+        }))();
     }
 };
 //# sourceMappingURL=bid.bricol-bt-city.controller.js.map
