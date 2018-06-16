@@ -38,9 +38,7 @@ export default {
                 for (let x = 0; x < req.files.length; x++) {
                     req.body.imgs.push(await toImgUrl(req.files[x]))
                 }
-            } else {
-                return next(new ApiError(422, "imgs are required"))
-            }
+            } 
             req.body.dueDate = parseInt(req.body.dueDate)
             req.body.user = req.user._id;
             let newDoc = await BricolBtCities.create(req.body);

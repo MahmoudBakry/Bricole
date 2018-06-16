@@ -76,7 +76,7 @@ exports.default = {
 
                         case 4:
                             if (!(req.files.length > 0)) {
-                                _context.next = 18;
+                                _context.next = 16;
                                 break;
                             }
 
@@ -104,39 +104,32 @@ exports.default = {
                             break;
 
                         case 16:
-                            _context.next = 19;
-                            break;
-
-                        case 18:
-                            return _context.abrupt('return', next(new _ApiError2.default(422, "imgs are required")));
-
-                        case 19:
                             req.body.dueDate = parseInt(req.body.dueDate);
                             req.body.user = req.user._id;
-                            _context.next = 23;
+                            _context.next = 20;
                             return _bricolBtCities2.default.create(req.body);
 
-                        case 23:
+                        case 20:
                             newDoc = _context.sent;
-                            _context.next = 26;
+                            _context.next = 23;
                             return _bricolBtCities2.default.findById(newDoc.id).populate('user');
 
-                        case 26:
+                        case 23:
                             newDocDetails = _context.sent;
                             return _context.abrupt('return', res.status(201).json(newDocDetails));
 
-                        case 30:
-                            _context.prev = 30;
+                        case 27:
+                            _context.prev = 27;
                             _context.t2 = _context['catch'](0);
 
                             next(_context.t2);
 
-                        case 33:
+                        case 30:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 30]]);
+            }, _callee, _this, [[0, 27]]);
         }))();
     },
 
