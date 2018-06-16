@@ -33,7 +33,7 @@ export default {
             let bidExist = await Bid.findOne(query);
             if (bidExist) {
                 console.log(bidExist)
-                return next(new ApiError(400, 'you have already bid before in the same bricol'));
+                return next(new ApiError(400, 'لا يمكنك إضافة عرضين لنفس الخدمة'));
             }
 
 

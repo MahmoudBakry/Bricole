@@ -25,6 +25,17 @@ export default {
             const validationErrors = validationResult(req).array();
             if (validationErrors.length > 0)
                 return next(new ApiError(422, validationErrors));
+            let query = {
+                user: req.body.user,
+                bricol: req.params.bricolId,
+                bidType: 'bricol-bt-cities'
+            }
+            let bidExist = await Bid.findOne(query);
+            if (bidExist) {
+                console.log(bidExist)
+                return next(new ApiError(400, 'لا يمكنك إضافة عرضين لنفس الخدمة'));
+            }
+
 
             let bricolId = req.params.bricolId;
             req.body.bricol = bricolId;

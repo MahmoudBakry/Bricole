@@ -83,7 +83,7 @@ exports.default = {
                             }
 
                             console.log(bidExist);
-                            return _context.abrupt('return', next(new _ApiError2.default(400, 'you have already bid before in the same bricol')));
+                            return _context.abrupt('return', next(new _ApiError2.default(400, 'لا يمكنك إضافة عرضين لنفس الخدمة')));
 
                         case 11:
                             bricolId = req.params.bricolId;
