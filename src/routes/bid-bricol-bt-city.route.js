@@ -6,6 +6,7 @@ const requireAuth = passport.authenticate('jwt', { session: false });
 const router = express.Router();
 
 
+
 router.route('/bricoles-cities/:bricolId/bids')
     .post(requireAuth,
     BidController.validateBody(),

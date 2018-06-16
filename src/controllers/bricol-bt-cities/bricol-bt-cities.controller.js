@@ -101,6 +101,9 @@ export default {
                 query.title = matchQueryRegx;
             }
 
+            //filter only pendding bricole 
+            query.status = "pendding"
+
             //sorted docs
             let sort = {}
             sort.creationDate = -1;

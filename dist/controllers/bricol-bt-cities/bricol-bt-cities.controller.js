@@ -227,6 +227,9 @@ exports.default = {
                                 query.title = matchQueryRegx;
                             }
 
+                            //filter only pendding bricole 
+                            query.status = "pendding";
+
                             //sorted docs
                             sort = {};
 
@@ -243,10 +246,10 @@ exports.default = {
 
                             limit = parseInt(req.query.limit) || 20;
                             page = req.query.page || 1;
-                            _context3.next = 16;
+                            _context3.next = 17;
                             return _bricolBtCities2.default.find(query).populate('user').skip((page - 1) * limit).limit(limit).sort(sort);
 
-                        case 16:
+                        case 17:
                             allDocs = _context3.sent;
 
 
@@ -254,9 +257,9 @@ exports.default = {
                             result = [];
                             x = 0;
 
-                        case 19:
+                        case 20:
                             if (!(x < allDocs.length)) {
-                                _context3.next = 28;
+                                _context3.next = 29;
                                 break;
                             }
 
@@ -265,39 +268,39 @@ exports.default = {
                                 bricol: allDocs[x].id,
                                 bidType: 'bricol-bt-cities'
                             };
-                            _context3.next = 23;
+                            _context3.next = 24;
                             return _bid2.default.count(bidQuery);
 
-                        case 23:
+                        case 24:
                             countOfBids = _context3.sent;
 
                             result.push({ bricol: allDocs[x], countOfBids: countOfBids });
 
-                        case 25:
+                        case 26:
                             x++;
-                            _context3.next = 19;
+                            _context3.next = 20;
                             break;
 
-                        case 28:
-                            _context3.next = 30;
+                        case 29:
+                            _context3.next = 31;
                             return _bricolBtCities2.default.count(query);
 
-                        case 30:
+                        case 31:
                             count = _context3.sent;
                             return _context3.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 34:
-                            _context3.prev = 34;
+                        case 35:
+                            _context3.prev = 35;
                             _context3.t0 = _context3['catch'](0);
 
                             next(_context3.t0);
 
-                        case 37:
+                        case 38:
                         case 'end':
                             return _context3.stop();
                     }
                 }
-            }, _callee3, _this3, [[0, 34]]);
+            }, _callee3, _this3, [[0, 35]]);
         }))();
     }
 };

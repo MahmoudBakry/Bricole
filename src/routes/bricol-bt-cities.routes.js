@@ -1,6 +1,7 @@
 import express from 'express';
 import BricolBtCityController from '../controllers/bricol-bt-cities/bricol-bt-cities.controller';
-import { multerSaveTo } from '../services/multer'
+import BidController from '../controllers/bricol-bt-cities/bid.bricol-bt-city.controller';
+import { multerSaveTo } from '../services/multer';
 const router = express.Router();
 
 router.route('/')
@@ -12,5 +13,9 @@ router.route('/')
 
 router.route('/:bricolId')
     .get(BricolBtCityController.retriveOneBricoleDetails)
+
+router.route('/:bricolId/bids/:bidId/accepted')
+    .put(BidController.accepptBid)
+
 
 export default router;

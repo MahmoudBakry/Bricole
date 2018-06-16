@@ -65,5 +65,34 @@ export default {
         }
     },
 
+    //acceppt bid 
+    async accepptBid(req, res, next) {
+        let bidId = req.params.bidId;
+        let bricolId = req.params.bricolId;
+
+        let bidDetails = await Bid.findById(bidId);
+        if (!bidDetails)
+            return next(new ApiError(404));
+
+        let bricolDetails = await BricolBtCities.findById(bricolId);
+        if (!bricolDetails)
+            return next(new ApiError(404));
+
+        let userId = req.user._id;
+        if (!(userId == bricolDetails.user))
+            return next(new ApiError(403, 'not access to this resource'))
+        //update bricol details 
+        bricolDetails.status = "assigned";
+        bricolDetails.bricoler = bidDetails.user;
+        await bricolDetails.save();
+        console.log(bricolDetails.bricoler)
+        //update bid 
+        bidDetails.status = 'accepted';
+        await bidDetails.save();
+
+        return res.status(204).end();
+
+    },
+
 
 }

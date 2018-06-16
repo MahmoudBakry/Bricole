@@ -49,11 +49,11 @@ function multerSaveTo(folderName) {
     });
 
     return (0, _multer2.default)({
-        storage: storage,
+        storage: storage
         //  fileFilter,
-        limits: {
-            fileSize: 1024 * 1024 * 10 // limit 10mb
-        }
+        // limits: {
+        //     fileSize: 1024 * 1024 * 10 // limit 10mb
+        // }
     });;
 }
 //# sourceMappingURL=multer.js.map

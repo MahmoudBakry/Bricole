@@ -134,6 +134,82 @@ exports.default = {
                 }
             }, _callee2, _this2, [[0, 16]]);
         }))();
+    },
+
+
+    //acceppt bid 
+    accepptBid: function accepptBid(req, res, next) {
+        var _this3 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+            var bidId, bricolId, bidDetails, bricolDetails, userId;
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                    switch (_context3.prev = _context3.next) {
+                        case 0:
+                            bidId = req.params.bidId;
+                            bricolId = req.params.bricolId;
+                            _context3.next = 4;
+                            return _bid2.default.findById(bidId);
+
+                        case 4:
+                            bidDetails = _context3.sent;
+
+                            if (bidDetails) {
+                                _context3.next = 7;
+                                break;
+                            }
+
+                            return _context3.abrupt('return', next(new _ApiError2.default(404)));
+
+                        case 7:
+                            _context3.next = 9;
+                            return _bricolBtCities2.default.findById(bricolId);
+
+                        case 9:
+                            bricolDetails = _context3.sent;
+
+                            if (bricolDetails) {
+                                _context3.next = 12;
+                                break;
+                            }
+
+                            return _context3.abrupt('return', next(new _ApiError2.default(404)));
+
+                        case 12:
+                            userId = req.user._id;
+
+                            if (userId == bricolDetails.user) {
+                                _context3.next = 15;
+                                break;
+                            }
+
+                            return _context3.abrupt('return', next(new _ApiError2.default(403, 'not access to this resource')));
+
+                        case 15:
+                            //update bricol details 
+                            bricolDetails.status = "assigned";
+                            bricolDetails.bricoler = bidDetails.user;
+                            _context3.next = 19;
+                            return bricolDetails.save();
+
+                        case 19:
+                            console.log(bricolDetails.bricoler);
+                            //update bid 
+                            bidDetails.status = 'accepted';
+                            _context3.next = 23;
+                            return bidDetails.save();
+
+                        case 23:
+                            return _context3.abrupt('return', res.status(204).end());
+
+                        case 24:
+                        case 'end':
+                            return _context3.stop();
+                    }
+                }
+            }, _callee3, _this3);
+        }))();
     }
 };
 //# sourceMappingURL=bid.bricol-bt-city.controller.js.map
