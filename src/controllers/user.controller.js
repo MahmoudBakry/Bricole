@@ -1,5 +1,6 @@
 import User from "../models/user.model";
 import Bricol from '../models/bricole.model';
+import BricolBtCity from '../models/bricol-bt-cities.model';
 import Bid from '../models/bid.model';
 import jwt from "jsonwebtoken";
 import config from "../config";
@@ -106,6 +107,9 @@ export default {
             const page = req.query.page || 1;
 
             let userId = req.params.userId
+            let userDetails = await User.findById(userId);
+            if (!userDetails)
+                return res.status(404).end();
             let query = {}
             if (req.query.status)
                 query.status = req.query.status
@@ -148,7 +152,12 @@ export default {
             const limit = parseInt(req.query.limit) || 20;
             const page = req.query.page || 1;
 
-            let bricolerId = req.params.bricolerId
+            let bricolerId = req.params.bricolerId;
+
+            let userDetails = await User.findById(bricolerId);
+            if (!userDetails)
+                return res.status(404).end();
+
             let query = {}
             if (req.query.status)
                 query.status = req.query.status
@@ -183,6 +192,251 @@ export default {
             next(err)
         }
     },
+
+    //retrive all bricoles between city under one user 
+    async retriveAllBricolsBtCityOfUser(req, res, next) {
+        try {
+            let userId = req.params.userId;
+            let userDetails = await User.findById(userId);
+            if (!userDetails)
+                return res.status(404).end();
+
+            const limit = parseInt(req.query.limit) || 20;
+            const page = req.query.page || 1;
+
+            let query = {}
+            query.user = userId;
+            if (req.query.status)
+                query.status = req.query.status
+            let allDocs = await BricolBtCity.find(query)
+                .populate('user')
+                .populate('job')
+                .populate('bricoler')
+                .skip((page - 1) * limit)
+                .limit(limit).sort({ creationDate: -1 })
+
+            //prepare response 
+            let result = [];
+            for (let x = 0; x < allDocs.length; x++) {
+                //get count of bids for each bricol
+                let bidQuery = {
+                    bricol: allDocs[x].id,
+                    bidType: 'bricol-bt-cities'
+                }
+                let countOfBids = await Bid.count(bidQuery)
+                result.push({ bricol: allDocs[x], countOfBids })
+            }
+
+            let count = await BricolBtCity.count(query);
+            return res.send(new ApiResponse(
+                result,
+                page,
+                Math.ceil(count / limit),
+                limit,
+                count,
+                req
+            ))
+        } catch (err) {
+            next(err)
+        }
+    },
+
+    //retrive all bricols between city under one bricoler 
+    async retriveAllBricolsBtCityOfBricoler(req, res, next) {
+        try {
+            let bricolerId = req.params.bricolerId;
+            //check if bricoler exist 
+            let userDetails = await User.findById(bricolerId);
+            if (!userDetails)
+                return res.status(404).end();
+
+            const limit = parseInt(req.query.limit) || 20;
+            const page = req.query.page || 1;
+
+            let query = {}
+            query.bricoler = bricolerId;
+            if (req.query.status)
+                query.status = req.query.status;
+
+            let allDocs = await BricolBtCity.find(query)
+                .populate('user')
+                .populate('job')
+                .populate('bricoler')
+                .skip((page - 1) * limit)
+                .limit(limit).sort({ creationDate: -1 })
+            let count = await BricolBtCity.count(query);
+            return res.send(new ApiResponse(
+                allDocs,
+                page,
+                Math.ceil(count / limit),
+                limit,
+                count,
+                req
+            ))
+        } catch (err) {
+            next(err)
+        }
+    },
+
+    //count #bricols under one User 
+    async countNumberOfBricolsOfUser(req, res, next) {
+        try {
+            let userId = req.params.userId;
+            let userDetails = await User.findById(userId);
+            if (!userDetails)
+                return res.status(404).end();
+
+            //incity Bricols 
+            let query = {}
+            query.user = userId;
+            let allBricols = await Bricol.count(query);
+            query.status = 'pendding'
+            let penddingBricols = await Bricol.count(query);
+            query.status = 'assigned';
+            let assignedBricols = await Bricol.count(query);
+            query.status = 'inProgress';
+            let inProgressBricols = await Bricol.count(query);
+            query.status = 'done';
+            let doneBricols = await Bricol.count(query);
+            let result = {}
+            result.incityBricols = {
+                allBricols,
+                penddingBricols,
+                assignedBricols,
+                inProgressBricols,
+                doneBricols
+            }
+
+            //between city bricols 
+            let btQuery = {}
+            btQuery.user = userId;
+            let allBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'pendding'
+            let penddingBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'assigned';
+            let assignedBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'inProgress';
+            let inProgressBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'done';
+            let doneBtBricols = await BricolBtCity.count(btQuery);
+            result.betweenCityBricols = {
+                allBtBricols,
+                penddingBtBricols,
+                assignedBtBricols,
+                inProgressBtBricols,
+                doneBtBricols
+            }
+            return res.status(200).json(result);
+        } catch (err) {
+            next(err)
+        }
+    },
+    //count #bricols under one User 
+    async countNumberOfBricolsOfUser(req, res, next) {
+        try {
+            let userId = req.params.userId;
+            let userDetails = await User.findById(userId);
+            if (!userDetails)
+                return res.status(404).end();
+
+            //incity Bricols 
+            let query = {}
+            query.user = userId;
+            let allBricols = await Bricol.count(query);
+            query.status = 'pendding'
+            let penddingBricols = await Bricol.count(query);
+            query.status = 'assigned';
+            let assignedBricols = await Bricol.count(query);
+            query.status = 'inProgress';
+            let inProgressBricols = await Bricol.count(query);
+            query.status = 'done';
+            let doneBricols = await Bricol.count(query);
+            let result = {}
+            result.incityBricols = {
+                allBricols,
+                penddingBricols,
+                assignedBricols,
+                inProgressBricols,
+                doneBricols
+            }
+
+            //between city bricols 
+            let btQuery = {}
+            btQuery.user = userId;
+            let allBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'pendding'
+            let penddingBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'assigned';
+            let assignedBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'inProgress';
+            let inProgressBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'done';
+            let doneBtBricols = await BricolBtCity.count(btQuery);
+            result.betweenCityBricols = {
+                allBtBricols,
+                penddingBtBricols,
+                assignedBtBricols,
+                inProgressBtBricols,
+                doneBtBricols
+            }
+            return res.status(200).json(result);
+        } catch (err) {
+            next(err)
+        }
+    },
+    //count #bricols under one Bricoler 
+    async countNumberOfBricolsOfBricoler(req, res, next) {
+        try {
+            let bricolerId = req.params.bricolerId;
+            let userDetails = await User.findById(bricolerId);
+            if (!userDetails)
+                return res.status(404).end();
+
+            //incity Bricols 
+            let query = {}
+            query.bricoler = bricolerId;
+            let allBricols = await Bricol.count(query);
+            query.status = 'pendding'
+            let penddingBricols = await Bricol.count(query);
+            query.status = 'assigned';
+            let assignedBricols = await Bricol.count(query);
+            query.status = 'inProgress';
+            let inProgressBricols = await Bricol.count(query);
+            query.status = 'done';
+            let doneBricols = await Bricol.count(query);
+            let result = {}
+            result.incityBricols = {
+                allBricols,
+                assignedBricols,
+                inProgressBricols,
+                doneBricols
+            }
+
+            //between city bricols 
+            let btQuery = {}
+            btQuery.bricoler = bricolerId;
+            let allBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'pendding'
+            let penddingBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'assigned';
+            let assignedBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'inProgress';
+            let inProgressBtBricols = await BricolBtCity.count(btQuery);
+            btQuery.status = 'done';
+            let doneBtBricols = await BricolBtCity.count(btQuery);
+            result.betweenCityBricols = {
+                allBtBricols,
+                assignedBtBricols,
+                inProgressBtBricols,
+                doneBtBricols
+            }
+            return res.status(200).json(result);
+        } catch (err) {
+            next(err)
+        }
+    },
+
+    
 
 
 

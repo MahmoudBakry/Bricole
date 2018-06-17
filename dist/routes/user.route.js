@@ -34,7 +34,15 @@ router.post("/signin", requireSignIn, _user2.default.signin);
 
 router.route('/users/:userId/bricols').get(requireAuth, _user2.default.fetchAllBricolOfOneUser);
 
+router.route('/users/:userId/bricols-bt-city').get(requireAuth, _user2.default.retriveAllBricolsBtCityOfUser);
+
+router.route('/users/:userId/bricols-statistics').get(requireAuth, _user2.default.countNumberOfBricolsOfUser);
+
+router.route('/bricolers/:bricolerId/bricols-bt-city').get(requireAuth, _user2.default.retriveAllBricolsBtCityOfBricoler);
+
 router.route('/bricolers/:bricolerId/bricols').get(requireAuth, _user2.default.fetchAllBricolOfOneBricoler);
+
+router.route('/bricolers/:bricolerId/bricols-statistics').get(requireAuth, _user2.default.countNumberOfBricolsOfBricoler);
 
 exports.default = router;
 //# sourceMappingURL=user.route.js.map
