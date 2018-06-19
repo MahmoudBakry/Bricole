@@ -962,5 +962,45 @@ exports.default = (_validateBody$signUp$ = {
             }
         }, _callee10, _this10, [[0, 55]]);
     }))();
+}), _defineProperty(_validateBody$signUp$, 'retriveUserDetails', function retriveUserDetails(req, res, next) {
+    var _this11 = this;
+
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11() {
+        var userId, userDetails;
+        return regeneratorRuntime.wrap(function _callee11$(_context11) {
+            while (1) {
+                switch (_context11.prev = _context11.next) {
+                    case 0:
+                        _context11.prev = 0;
+                        userId = req.params.userId;
+                        _context11.next = 4;
+                        return _user2.default.findById(userId).populate('jobs').populate('city');
+
+                    case 4:
+                        userDetails = _context11.sent;
+
+                        if (userDetails) {
+                            _context11.next = 7;
+                            break;
+                        }
+
+                        return _context11.abrupt('return', res.status(404).end());
+
+                    case 7:
+                        return _context11.abrupt('return', res.status(200).json(userDetails));
+
+                    case 10:
+                        _context11.prev = 10;
+                        _context11.t0 = _context11['catch'](0);
+
+                        next(_context11.t0);
+
+                    case 13:
+                    case 'end':
+                        return _context11.stop();
+                }
+            }
+        }, _callee11, _this11, [[0, 10]]);
+    }))();
 }), _validateBody$signUp$);
 //# sourceMappingURL=user.controller.js.map

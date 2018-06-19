@@ -435,9 +435,18 @@ export default {
             next(err)
         }
     },
+    async retriveUserDetails(req, res, next) {
+        try {
+            let userId = req.params.userId;
+            let userDetails = await User.findById(userId)
+                .populate('jobs')
+                .populate('city')
+            if (!userDetails)
+                return res.status(404).end();
 
-    
-
-
-
+            return res.status(200).json(userDetails);
+        } catch (err) {
+            next(err)
+        }
+    },
 }

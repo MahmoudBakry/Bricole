@@ -5,6 +5,7 @@ import BricolRoutes from './bricol.route';
 import BidRoutes from './bid.route';
 import BricolBtCitiesRoutes from './bricol-bt-cities.routes';
 import BidBtCities from './bid-bricol-bt-city.route';
+import AdminRoutes from './admin.route';
 
 import express from 'express';
 import passport from "passport";
@@ -21,5 +22,7 @@ router.use('/', BidRoutes)
 
 router.use('/bricoles-cities', requireAuth, BricolBtCitiesRoutes)
 router.use('/', BidBtCities)
+
+router.use('/admin', requireAuth, AdminRoutes)
 
 export default router;

@@ -16,6 +16,9 @@ router.route('/signup')
 
 router.post("/signin", requireSignIn, UserController.signin)
 
+router.route('/users/:userId')
+    .get(requireAuth, UserController.retriveUserDetails)
+
 router.route('/users/:userId/bricols')
     .get(requireAuth, UserController.fetchAllBricolOfOneUser)
 
