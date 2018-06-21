@@ -80,6 +80,21 @@ const UserSchema = new Schema({
     policyIdentityImage: {
         type: String
     },
+    about: {
+        type: String
+    },
+    portofolio: [{
+        type: String  //array of urls
+    }],
+    status: {
+        type: String,
+        enum: ['online', 'offline', 'on Vacation'],
+        default: 'online'
+    },
+    completed: {
+        type: Boolean,
+        default: false
+    },
     pushTokens: [{
         type: String
     }],

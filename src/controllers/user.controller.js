@@ -12,6 +12,7 @@ import { toImgUrl } from '../utils/index'
 import ApiResponse from '../helpers/ApiResponse'
 
 
+
 const { jwtSecret } = config;
 const generateToken = id => {
 
@@ -435,6 +436,7 @@ export default {
             next(err)
         }
     },
+    //fetch user by id
     async retriveUserDetails(req, res, next) {
         try {
             let userId = req.params.userId;
@@ -449,4 +451,48 @@ export default {
             next(err)
         }
     },
+
+    //validation of complete profile logic
+    validateCompleteProfileBody(isUpdate = false) {
+        return [
+            body("about").exists().withMessage("about is required"),
+            //note express validator don't work with mutet
+           // body("portofolio").exists().withMessage("portofolio is required"),
+        ];
+    },
+    //complete profile of user 
+    async completeProfile(req, res, next) {
+        const validationErrors = validationResult(req).array();
+        if (validationErrors.length > 0)
+            return next(new ApiError(422, validationErrors));
+        try {
+            let userId = req.params.userId;
+            let userDetails = await User.findById(userId);
+            if (!userDetails)
+                return res.status(404).end();
+ 
+            //prepare data 
+            if (req.files.length > 0) {
+                req.body.portofolio = []
+                for (let x = 0; x < req.files.length; x++) {
+                    req.body.portofolio.push(await toImgUrl(req.files[x]))
+                }
+            } 
+           await User.findByIdAndUpdate(userId, req.body, {new  : true});
+            //assign new attributed value to user object
+            // userDetails.about = req.body.about;
+            // userDetails.portofolio = req.body.portofolio;
+            userDetails.completed = 'true';
+            await userDetails.save();
+            //return new user 
+            let newObject = await User.findById(userId)
+                .populate('city')
+                .populate('jobs')
+            return res.status(200).json(newObject);
+
+        } catch (err) {
+            next(err)
+        }
+    },
+
 }

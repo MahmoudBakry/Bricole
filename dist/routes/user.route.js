@@ -34,6 +34,8 @@ router.post("/signin", requireSignIn, _user2.default.signin);
 
 router.route('/users/:userId').get(requireAuth, _user2.default.retriveUserDetails);
 
+router.route('/users/:userId/complete-profile').put(requireAuth, (0, _multer.multerSaveTo)('users').array('portofolio'), _user2.default.validateCompleteProfileBody(), _user2.default.completeProfile);
+
 router.route('/users/:userId/bricols').get(requireAuth, _user2.default.fetchAllBricolOfOneUser);
 
 router.route('/users/:userId/bricols-bt-city').get(requireAuth, _user2.default.retriveAllBricolsBtCityOfUser);

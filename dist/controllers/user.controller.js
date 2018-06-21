@@ -1002,5 +1002,105 @@ exports.default = (_validateBody$signUp$ = {
             }
         }, _callee11, _this11, [[0, 10]]);
     }))();
+}), _defineProperty(_validateBody$signUp$, 'validateCompleteProfileBody', function validateCompleteProfileBody() {
+    var isUpdate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+    return [(0, _check.body)("about").exists().withMessage("about is required")];
+}), _defineProperty(_validateBody$signUp$, 'completeProfile', function completeProfile(req, res, next) {
+    var _this12 = this;
+
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee12() {
+        var validationErrors, userId, userDetails, x, newObject;
+        return regeneratorRuntime.wrap(function _callee12$(_context12) {
+            while (1) {
+                switch (_context12.prev = _context12.next) {
+                    case 0:
+                        validationErrors = (0, _check.validationResult)(req).array();
+
+                        if (!(validationErrors.length > 0)) {
+                            _context12.next = 3;
+                            break;
+                        }
+
+                        return _context12.abrupt('return', next(new _ApiError2.default(422, validationErrors)));
+
+                    case 3:
+                        _context12.prev = 3;
+                        userId = req.params.userId;
+                        _context12.next = 7;
+                        return _user2.default.findById(userId);
+
+                    case 7:
+                        userDetails = _context12.sent;
+
+                        if (userDetails) {
+                            _context12.next = 10;
+                            break;
+                        }
+
+                        return _context12.abrupt('return', res.status(404).end());
+
+                    case 10:
+                        if (!(req.files.length > 0)) {
+                            _context12.next = 22;
+                            break;
+                        }
+
+                        req.body.portofolio = [];
+                        x = 0;
+
+                    case 13:
+                        if (!(x < req.files.length)) {
+                            _context12.next = 22;
+                            break;
+                        }
+
+                        _context12.t0 = req.body.portofolio;
+                        _context12.next = 17;
+                        return (0, _index.toImgUrl)(req.files[x]);
+
+                    case 17:
+                        _context12.t1 = _context12.sent;
+
+                        _context12.t0.push.call(_context12.t0, _context12.t1);
+
+                    case 19:
+                        x++;
+                        _context12.next = 13;
+                        break;
+
+                    case 22:
+                        _context12.next = 24;
+                        return _user2.default.findByIdAndUpdate(userId, req.body, { new: true });
+
+                    case 24:
+                        //assign new attributed value to user object
+                        // userDetails.about = req.body.about;
+                        // userDetails.portofolio = req.body.portofolio;
+                        userDetails.completed = 'true';
+                        _context12.next = 27;
+                        return userDetails.save();
+
+                    case 27:
+                        _context12.next = 29;
+                        return _user2.default.findById(userId).populate('city').populate('jobs');
+
+                    case 29:
+                        newObject = _context12.sent;
+                        return _context12.abrupt('return', res.status(200).json(newObject));
+
+                    case 33:
+                        _context12.prev = 33;
+                        _context12.t2 = _context12['catch'](3);
+
+                        next(_context12.t2);
+
+                    case 36:
+                    case 'end':
+                        return _context12.stop();
+                }
+            }
+        }, _callee12, _this12, [[3, 33]]);
+    }))();
 }), _validateBody$signUp$);
 //# sourceMappingURL=user.controller.js.map

@@ -19,6 +19,13 @@ router.post("/signin", requireSignIn, UserController.signin)
 router.route('/users/:userId')
     .get(requireAuth, UserController.retriveUserDetails)
 
+router.route('/users/:userId/complete-profile')
+    .put(requireAuth,
+    multerSaveTo('users').array('portofolio'),
+    UserController.validateCompleteProfileBody(),
+    UserController.completeProfile)
+
+
 router.route('/users/:userId/bricols')
     .get(requireAuth, UserController.fetchAllBricolOfOneUser)
 
