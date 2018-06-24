@@ -32,13 +32,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+var deg2rad = function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+};
+
 exports.default = {
     //retrive all user that have complete profile 
     fetchAllBricoler: function fetchAllBricoler(req, res, next) {
         var _this = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var limit, page, _req$query, jobs, gender, query, matchQueryRegx, allDocs, count;
+            var limit, page, _req$query, jobs, gender, query, matchQueryRegx, allDocs, userLocation, result, x, bricolerLocationToDistance, lang1, lat1, lang2, lat2, R, dLat, dLon, a, c, d, count;
 
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
@@ -65,25 +69,57 @@ exports.default = {
 
                         case 10:
                             allDocs = _context.sent;
-                            _context.next = 13;
+
+
+                            //1 - calculate distance between user and bricoler
+                            userLocation = req.user.location;
+                            result = [];
+
+                            for (x = 0; x < allDocs.length; x++) {
+                                bricolerLocationToDistance = allDocs[x].location;
+
+                                //first locattion point
+
+                                lang1 = parseFloat(bricolerLocationToDistance[0]);
+                                lat1 = parseFloat(bricolerLocationToDistance[1]);
+
+                                console.log(lang1);
+
+                                //scound location point
+                                lang2 = parseFloat(userLocation[0]);
+                                lat2 = parseFloat(userLocation[1]);
+                                R = 6371; // Radius of the earth in km
+
+                                dLat = deg2rad(lat2 - lat1); // deg2rad above
+
+                                dLon = deg2rad(lang2 - lang1);
+                                a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                                c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                                d = R * c; // Distance in km
+                                //console.log(d)
+
+                                result.push({ bricol: allDocs[x], distanceInKm: d });
+                            }
+
+                            _context.next = 16;
                             return _user2.default.count(query);
 
-                        case 13:
+                        case 16:
                             count = _context.sent;
-                            return _context.abrupt('return', res.send(new _ApiResponse2.default(allDocs, page, Math.ceil(count / limit), limit, count, req)));
+                            return _context.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 17:
-                            _context.prev = 17;
+                        case 20:
+                            _context.prev = 20;
                             _context.t0 = _context['catch'](0);
 
                             next(_context.t0);
 
-                        case 20:
+                        case 23:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 17]]);
+            }, _callee, _this, [[0, 20]]);
         }))();
     }
 };

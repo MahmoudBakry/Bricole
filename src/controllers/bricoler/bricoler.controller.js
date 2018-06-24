@@ -7,6 +7,11 @@ import { escapeRegExp } from 'lodash';
 import * as _ from 'lodash';
 
 
+
+let deg2rad = (deg) => {
+    return deg * (Math.PI / 180)
+}
+
 export default {
     //retrive all user that have complete profile 
     async fetchAllBricoler(req, res, next) {
@@ -31,9 +36,40 @@ export default {
                 .skip((page - 1) * limit)
                 .limit(limit).sort({ creationDate: -1 })
 
+            //1 - calculate distance between user and bricoler
+            let userLocation = req.user.location;
+            let result = []
+            for (let x = 0; x < allDocs.length; x++) {
+                let bricolerLocationToDistance = allDocs[x].location;
+
+                //first locattion point
+                let lang1 = parseFloat(bricolerLocationToDistance[0]);
+                let lat1 = parseFloat(bricolerLocationToDistance[1]);
+                console.log(lang1)
+
+                //scound location point
+                let lang2 = parseFloat(userLocation[0]);
+                let lat2 = parseFloat(userLocation[1]);
+
+                let R = 6371; // Radius of the earth in km
+                let dLat = deg2rad(lat2 - lat1);  // deg2rad above
+                let dLon = deg2rad(lang2 - lang1);
+                let a =
+                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                let d = R * c; // Distance in km
+                //console.log(d)
+                result.push({ bricol: allDocs[x], distanceInKm: d })
+            }
+
+
+
+
             let count = await User.count(query);
             return res.send(new ApiResponse(
-                allDocs,
+                result,
                 page,
                 Math.ceil(count / limit),
                 limit,

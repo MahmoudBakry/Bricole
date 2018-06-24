@@ -1,0 +1,63 @@
+import User from '../../models/user.model';
+import SpecialRequest from '../../models/special-request.model';
+import mongoose from 'mongoose';
+import ApiResponse from '../../helpers/ApiResponse';
+import ApiError from '../../helpers/ApiError';
+import { body, param, validationResult } from 'express-validator/check';
+import { escapeRegExp } from 'lodash';
+import * as _ from 'lodash';
+import { toImgUrl } from '../../utils/index'
+
+export default {
+
+    //validation for create new request
+    validateBody(isUpdate = false) {
+        let validations = [
+            body("title").exists().withMessage("title is required"),
+            body("description").exists().withMessage("descripption is required"),
+            body('lang').exists().withMessage("lang  is required"),
+            body("lat").exists().withMessage("lat is required"),
+            body("dueDate").exists().withMessage("dueDate is required")
+        ];
+        return validations;
+    },
+
+    async createNewSpecialRequest(req, res, next) {
+        try {
+            const validationErrors = validationResult(req).array();
+            if (validationErrors.length > 0)
+                return next(new ApiError(422, validationErrors));
+
+
+            let bricolerId = req.params.bricolerId;
+            //prepare data 
+            if (req.files.length > 0) {
+                req.body.imgs = []
+                for (let x = 0; x < req.files.length; x++) {
+                    req.body.imgs.push(await toImgUrl(req.files[x]))
+                }
+            } else
+                return next(new ApiError(422, "imgs are required"))
+            let lang = req.body.lang;   //long
+            let lat = req.body.lat;//lat
+            let requestLocation = [lang, lat] //modify location 
+            req.body.location = requestLocation;
+            req.body.dueDate = parseInt(req.body.dueDate)
+            req.body.user = req.user.id;
+            req.body.bricoler = bricolerId;
+
+            //create new doc 
+            let newDoc = await SpecialRequest.create(req.body);
+            let createdDoc = await SpecialRequest.findById(newDoc.id)
+                .populate('user')
+                .populate('bricoler')
+
+            return res.status(201).json(createdDoc);
+
+        } catch (err) {
+            next(err)
+        }
+    }
+}
+
+
