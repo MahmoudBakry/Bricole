@@ -84,7 +84,7 @@ var UserSchema = new _mongoose.Schema({
     },
     creationDate: {
         type: Date,
-        default: new Date()
+        default: Date.now
     },
     trusted: {
         type: Boolean,

@@ -8,6 +8,10 @@ var _user = require('../controllers/user.controller');
 
 var _user2 = _interopRequireDefault(_user);
 
+var _bricoler = require('../controllers/bricoler/bricoler.controller');
+
+var _bricoler2 = _interopRequireDefault(_bricoler);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -31,6 +35,8 @@ var router = _express2.default.Router();
 router.route('/signup').post((0, _multer.multerSaveTo)('users').single('img'), _user2.default.validateBody(), _user2.default.signUp);
 
 router.post("/signin", requireSignIn, _user2.default.signin);
+
+router.route('/bricolers').get(requireAuth, _bricoler2.default.fetchAllBricoler);
 
 router.route('/users/:userId').get(requireAuth, _user2.default.retriveUserDetails);
 

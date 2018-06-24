@@ -1,4 +1,5 @@
-import UserController from '../controllers/user.controller'
+import UserController from '../controllers/user.controller';
+import BricolerController from '../controllers/bricoler/bricoler.controller';
 import express from 'express';
 import passport from 'passport';
 import passportService from '../services/passport';
@@ -15,6 +16,9 @@ router.route('/signup')
     )
 
 router.post("/signin", requireSignIn, UserController.signin)
+
+router.route('/bricolers', )
+    .get(requireAuth, BricolerController.fetchAllBricoler)
 
 router.route('/users/:userId')
     .get(requireAuth, UserController.retriveUserDetails)
