@@ -159,30 +159,31 @@ exports.default = {
                             query = {};
 
                             query.bricoler = bricolerId;
-                            _context2.next = 13;
+                            query.status = 'pennding';
+                            _context2.next = 14;
                             return _specialRequest2.default.find(query).populate('user').populate('bricoler').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
 
-                        case 13:
+                        case 14:
                             allDocs = _context2.sent;
-                            _context2.next = 16;
+                            _context2.next = 17;
                             return _specialRequest2.default.count(query);
 
-                        case 16:
+                        case 17:
                             count = _context2.sent;
                             return _context2.abrupt('return', res.send(new _ApiResponse2.default(allDocs, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 20:
-                            _context2.prev = 20;
+                        case 21:
+                            _context2.prev = 21;
                             _context2.t0 = _context2['catch'](0);
 
                             next(_context2.t0);
 
-                        case 23:
+                        case 24:
                         case 'end':
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2, [[0, 20]]);
+            }, _callee2, _this2, [[0, 21]]);
         }))();
     }
 };

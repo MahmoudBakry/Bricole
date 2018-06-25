@@ -22,5 +22,7 @@ router.route('/bricolers/:bricolerId/request').post((0, _multer.multerSaveTo)('s
 
 router.route('/bricolers/:bricolerId/requests/:requestId').get(_specialRequest2.default.retriveOneRequestDetails);
 
+router.route('/bricolers/:bricolerId/requests/:requestId/accept').put(_specialRequest2.default.acceptRequest);
+
 exports.default = router;
 //# sourceMappingURL=special-request.route.js.map

@@ -195,6 +195,72 @@ exports.default = {
                 }
             }, _callee2, _this2, [[0, 15]]);
         }))();
+    },
+
+
+    //accept request by bricoler 
+    acceptRequest: function acceptRequest(req, res, next) {
+        var _this3 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+            var bricolerId, bricolerDetails, requestId, requestDetails, newDoc;
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                    switch (_context3.prev = _context3.next) {
+                        case 0:
+                            _context3.prev = 0;
+                            bricolerId = req.params.bricolerId;
+                            _context3.next = 4;
+                            return _user2.default.findById(bricolerId);
+
+                        case 4:
+                            bricolerDetails = _context3.sent;
+
+                            if (!bricolerDetails) res.status(404).end();
+
+                            requestId = req.params.requestId;
+                            _context3.next = 9;
+                            return _specialRequest2.default.findById(requestId);
+
+                        case 9:
+                            requestDetails = _context3.sent;
+
+                            if (requestDetails) {
+                                _context3.next = 12;
+                                break;
+                            }
+
+                            return _context3.abrupt('return', res.status(404).end());
+
+                        case 12:
+
+                            if (!(req.user.id == requestDetails.bricoler)) next(new _ApiError2.default(403, 'must bricoler only can accept it'));
+
+                            requestDetails.status = "accepted";
+                            _context3.next = 16;
+                            return requestDetails.save();
+
+                        case 16:
+                            _context3.next = 18;
+                            return _specialRequest2.default.findById(requestDetails.id).populate('user').populate('bricoler');
+
+                        case 18:
+                            newDoc = _context3.sent;
+                            return _context3.abrupt('return', res.status(200).json(newDoc));
+
+                        case 22:
+                            _context3.prev = 22;
+                            _context3.t0 = _context3['catch'](0);
+
+                            next(_context3.t0);
+
+                        case 25:
+                        case 'end':
+                            return _context3.stop();
+                    }
+                }
+            }, _callee3, _this3, [[0, 22]]);
+        }))();
     }
 };
 //# sourceMappingURL=special-request.controller.js.map

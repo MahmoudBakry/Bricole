@@ -70,13 +70,44 @@ export default {
             let requestDetails = await SpecialRequest.findById(requestId)
                 .populate('user')
                 .populate('bricoler')
-            if (!requestDetails) 
-                return res.status(404).end()   
+            if (!requestDetails)
+                return res.status(404).end()
             return res.status(200).json(requestDetails);
         } catch (err) {
             next(err)
         }
     },
+
+    //accept request by bricoler 
+    async acceptRequest(req, res, next) {
+        try {
+
+            let bricolerId = req.params.bricolerId;
+            let bricolerDetails = await User.findById(bricolerId);
+            if (!bricolerDetails)
+                res.status(404).end();
+
+            let requestId = req.params.requestId;
+            let requestDetails = await SpecialRequest.findById(requestId)
+            if (!requestDetails)
+                return res.status(404).end();
+
+            if (!(req.user.id == requestDetails.bricoler))
+                next(new ApiError(403, 'must bricoler only can accept it'));
+
+            requestDetails.status = "accepted";
+            await requestDetails.save();
+
+            let newDoc = await SpecialRequest.findById(requestDetails.id)
+                .populate('user')
+                .populate('bricoler')
+
+            return res.status(200).json(newDoc);
+
+        } catch (err) {
+            next(err)
+        }
+    }
 }
 
 

@@ -95,6 +95,7 @@ export default {
                 return res.status(404).end();
             let query = {}
             query.bricoler = bricolerId;
+            query.status = 'pennding'
             let allDocs = await SpecialRequest.find(query)
                 .populate('user')
                 .populate('bricoler')

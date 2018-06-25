@@ -13,4 +13,7 @@ router.route('/bricolers/:bricolerId/request')
 router.route('/bricolers/:bricolerId/requests/:requestId')
     .get(specialRequestController.retriveOneRequestDetails)
 
+router.route('/bricolers/:bricolerId/requests/:requestId/accept')
+    .put(specialRequestController.acceptRequest)
+
 export default router;
