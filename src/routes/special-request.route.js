@@ -16,4 +16,7 @@ router.route('/bricolers/:bricolerId/requests/:requestId')
 router.route('/bricolers/:bricolerId/requests/:requestId/accept')
     .put(specialRequestController.acceptRequest)
 
+router.route('/bricolers/:bricolerId/requests/:requestId/ignore')
+    .put(specialRequestController.ignoreRequst)
+
 export default router;

@@ -24,5 +24,7 @@ router.route('/bricolers/:bricolerId/requests/:requestId').get(_specialRequest2.
 
 router.route('/bricolers/:bricolerId/requests/:requestId/accept').put(_specialRequest2.default.acceptRequest);
 
+router.route('/bricolers/:bricolerId/requests/:requestId/ignore').put(_specialRequest2.default.ignoreRequst);
+
 exports.default = router;
 //# sourceMappingURL=special-request.route.js.map

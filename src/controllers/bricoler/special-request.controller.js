@@ -107,6 +107,36 @@ export default {
         } catch (err) {
             next(err)
         }
+    },
+      //ignore request by bricoler 
+      async ignoreRequst(req, res, next) {
+        try {
+
+            let bricolerId = req.params.bricolerId;
+            let bricolerDetails = await User.findById(bricolerId);
+            if (!bricolerDetails)
+                res.status(404).end();
+
+            let requestId = req.params.requestId;
+            let requestDetails = await SpecialRequest.findById(requestId)
+            if (!requestDetails)
+                return res.status(404).end();
+
+            if (!(req.user.id == requestDetails.bricoler))
+                next(new ApiError(403, 'must bricoler only can ignored it'));
+
+            requestDetails.status = "ignored";
+            await requestDetails.save();
+
+            let newDoc = await SpecialRequest.findById(requestDetails.id)
+                .populate('user')
+                .populate('bricoler')
+
+            return res.status(200).json(newDoc);
+
+        } catch (err) {
+            next(err)
+        }
     }
 }
 
