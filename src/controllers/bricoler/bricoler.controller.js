@@ -1,4 +1,5 @@
 import User from '../../models/user.model';
+import SpecialRequest from '../../models/special-request.model';
 import mongoose from 'mongoose';
 import ApiResponse from '../../helpers/ApiResponse';
 import ApiError from '../../helpers/ApiError';
@@ -80,5 +81,38 @@ export default {
             next(err)
         }
 
-    }
+    },
+
+    //fetch all requests for specific bricoler 
+    async fetchRequestOfOneBricoler(req, res, next) {
+        try {
+            const limit = parseInt(req.query.limit) || 200;
+            const page = req.query.page || 1;
+            let bricolerId = req.params.bricolerId;
+
+            let bricolerDetails = await User.findById(bricolerId);
+            if (!bricolerDetails)
+                return res.status(404).end();
+            let query = {}
+            query.bricoler = bricolerId;
+            let allDocs = await SpecialRequest.find(query)
+                .populate('user')
+                .populate('bricoler')
+                .skip((page - 1) * limit)
+                .limit(limit).sort({creationDate : -1})
+
+            let count = await SpecialRequest.count(query);
+            return res.send(new ApiResponse(
+                allDocs,
+                page,
+                Math.ceil(count / limit),
+                limit,
+                count,
+                req
+            ))
+
+        } catch (err) {
+            next(err)
+        }
+    },
 }

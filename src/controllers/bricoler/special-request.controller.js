@@ -57,7 +57,26 @@ export default {
         } catch (err) {
             next(err)
         }
-    }
+    },
+
+    //retrive one request 
+    async retriveOneRequestDetails(req, res, next) {
+        try {
+            let bricolerId = req.params.bricolerId;
+            let bricolerDetails = await User.findById(bricolerId);
+            if (!bricolerDetails)
+                res.status(404).end();
+            let requestId = req.params.requestId;
+            let requestDetails = await SpecialRequest.findById(requestId)
+                .populate('user')
+                .populate('bricoler')
+            if (!requestDetails) 
+                return res.status(404).end()   
+            return res.status(200).json(requestDetails);
+        } catch (err) {
+            next(err)
+        }
+    },
 }
 
 

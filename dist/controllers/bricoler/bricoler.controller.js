@@ -8,6 +8,10 @@ var _user = require('../../models/user.model');
 
 var _user2 = _interopRequireDefault(_user);
 
+var _specialRequest = require('../../models/special-request.model');
+
+var _specialRequest2 = _interopRequireDefault(_specialRequest);
+
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -120,6 +124,65 @@ exports.default = {
                     }
                 }
             }, _callee, _this, [[0, 20]]);
+        }))();
+    },
+
+
+    //fetch all requests for specific bricoler 
+    fetchRequestOfOneBricoler: function fetchRequestOfOneBricoler(req, res, next) {
+        var _this2 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+            var limit, page, bricolerId, bricolerDetails, query, allDocs, count;
+            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                while (1) {
+                    switch (_context2.prev = _context2.next) {
+                        case 0:
+                            _context2.prev = 0;
+                            limit = parseInt(req.query.limit) || 200;
+                            page = req.query.page || 1;
+                            bricolerId = req.params.bricolerId;
+                            _context2.next = 6;
+                            return _user2.default.findById(bricolerId);
+
+                        case 6:
+                            bricolerDetails = _context2.sent;
+
+                            if (bricolerDetails) {
+                                _context2.next = 9;
+                                break;
+                            }
+
+                            return _context2.abrupt('return', res.status(404).end());
+
+                        case 9:
+                            query = {};
+
+                            query.bricoler = bricolerId;
+                            _context2.next = 13;
+                            return _specialRequest2.default.find(query).populate('user').populate('bricoler').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
+
+                        case 13:
+                            allDocs = _context2.sent;
+                            _context2.next = 16;
+                            return _specialRequest2.default.count(query);
+
+                        case 16:
+                            count = _context2.sent;
+                            return _context2.abrupt('return', res.send(new _ApiResponse2.default(allDocs, page, Math.ceil(count / limit), limit, count, req)));
+
+                        case 20:
+                            _context2.prev = 20;
+                            _context2.t0 = _context2['catch'](0);
+
+                            next(_context2.t0);
+
+                        case 23:
+                        case 'end':
+                            return _context2.stop();
+                    }
+                }
+            }, _callee2, _this2, [[0, 20]]);
         }))();
     }
 };

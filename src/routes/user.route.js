@@ -39,6 +39,10 @@ router.route('/users/:userId/bricols-bt-city')
 router.route('/users/:userId/bricols-statistics')
     .get(requireAuth, UserController.countNumberOfBricolsOfUser)
 
+//requests
+router.route('/bricolers/:bricolerId/special-requests')
+    .get(requireAuth, BricolerController.fetchRequestOfOneBricoler)
+
 router.route('/bricolers/:bricolerId/bricols-bt-city')
     .get(requireAuth, UserController.retriveAllBricolsBtCityOfBricoler)
 

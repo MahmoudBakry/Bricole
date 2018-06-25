@@ -20,5 +20,7 @@ var router = _express2.default.Router();
 
 router.route('/bricolers/:bricolerId/request').post((0, _multer.multerSaveTo)('specialrequest').array('imgs'), _specialRequest2.default.validateBody(), _specialRequest2.default.createNewSpecialRequest);
 
+router.route('/bricolers/:bricolerId/requests/:requestId').get(_specialRequest2.default.retriveOneRequestDetails);
+
 exports.default = router;
 //# sourceMappingURL=special-request.route.js.map

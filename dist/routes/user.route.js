@@ -48,6 +48,9 @@ router.route('/users/:userId/bricols-bt-city').get(requireAuth, _user2.default.r
 
 router.route('/users/:userId/bricols-statistics').get(requireAuth, _user2.default.countNumberOfBricolsOfUser);
 
+//requests
+router.route('/bricolers/:bricolerId/special-requests').get(requireAuth, _bricoler2.default.fetchRequestOfOneBricoler);
+
 router.route('/bricolers/:bricolerId/bricols-bt-city').get(requireAuth, _user2.default.retriveAllBricolsBtCityOfBricoler);
 
 router.route('/bricolers/:bricolerId/bricols').get(requireAuth, _user2.default.fetchAllBricolOfOneBricoler);

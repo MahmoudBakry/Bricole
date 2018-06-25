@@ -143,6 +143,58 @@ exports.default = {
                 }
             }, _callee, _this, [[0, 36]]);
         }))();
+    },
+
+
+    //retrive one request 
+    retriveOneRequestDetails: function retriveOneRequestDetails(req, res, next) {
+        var _this2 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+            var bricolerId, bricolerDetails, requestId, requestDetails;
+            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                while (1) {
+                    switch (_context2.prev = _context2.next) {
+                        case 0:
+                            _context2.prev = 0;
+                            bricolerId = req.params.bricolerId;
+                            _context2.next = 4;
+                            return _user2.default.findById(bricolerId);
+
+                        case 4:
+                            bricolerDetails = _context2.sent;
+
+                            if (!bricolerDetails) res.status(404).end();
+                            requestId = req.params.requestId;
+                            _context2.next = 9;
+                            return _specialRequest2.default.findById(requestId).populate('user').populate('bricoler');
+
+                        case 9:
+                            requestDetails = _context2.sent;
+
+                            if (requestDetails) {
+                                _context2.next = 12;
+                                break;
+                            }
+
+                            return _context2.abrupt('return', res.status(404).end());
+
+                        case 12:
+                            return _context2.abrupt('return', res.status(200).json(requestDetails));
+
+                        case 15:
+                            _context2.prev = 15;
+                            _context2.t0 = _context2['catch'](0);
+
+                            next(_context2.t0);
+
+                        case 18:
+                        case 'end':
+                            return _context2.stop();
+                    }
+                }
+            }, _callee2, _this2, [[0, 15]]);
+        }))();
     }
 };
 //# sourceMappingURL=special-request.controller.js.map
