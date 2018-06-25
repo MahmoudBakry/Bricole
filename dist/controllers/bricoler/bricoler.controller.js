@@ -159,7 +159,7 @@ exports.default = {
                             query = {};
 
                             query.bricoler = bricolerId;
-                            query.status = 'pennding';
+                            query.status = 'pendding';
                             _context2.next = 14;
                             return _specialRequest2.default.find(query).populate('user').populate('bricoler').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
 
