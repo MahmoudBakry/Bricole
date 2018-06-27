@@ -1,6 +1,7 @@
 import Bid from '../models/bid.model';
 import Bricol from '../models/bricole.model';
 import User from '../models/user.model';
+import History from '../models/history.model';
 import mongoose from 'mongoose';
 import ApiResponse from '../helpers/ApiResponse';
 import ApiError from '../helpers/ApiError';
@@ -111,6 +112,7 @@ export default {
 
     //acceppt bid 
     async accepptBid(req, res, next) {
+        console.log(req.user._id)
         let bidId = req.params.bidId;
         let bricolId = req.params.bricolId;
 
@@ -125,7 +127,7 @@ export default {
         let userId = req.user._id;
         if (!(userId == bricolDetails.user))
             return next(new ApiError(403, 'not access to this resource'))
-        //update bricol details 
+      //  update bricol details 
         bricolDetails.status = "assigned";
         bricolDetails.bricoler = bidDetails.user;
         await bricolDetails.save();
@@ -134,6 +136,17 @@ export default {
         bidDetails.status = 'accepted';
         await bidDetails.save();
 
+        //update bricole history 
+        let historyQuery = {
+            serviceType: 'bricol',
+            service: bricolDetails.id,
+            user: bricolDetails.user,
+        }
+        let historyDoc = await History.findOne(historyQuery);
+        console.log(historyDoc)
+        historyDoc.status = "assigned";
+        await bidDetails.save();
+        console.log(historyDoc.status);
         return res.status(204).end();
 
     },

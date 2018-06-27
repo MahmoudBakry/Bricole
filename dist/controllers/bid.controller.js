@@ -18,6 +18,10 @@ var _user = require('../models/user.model');
 
 var _user2 = _interopRequireDefault(_user);
 
+var _history = require('../models/history.model');
+
+var _history2 = _interopRequireDefault(_history);
+
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -262,68 +266,89 @@ exports.default = {
         var _this5 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
-            var bidId, bricolId, bidDetails, bricolDetails, userId;
+            var bidId, bricolId, bidDetails, bricolDetails, userId, historyQuery, historyDoc;
             return regeneratorRuntime.wrap(function _callee5$(_context5) {
                 while (1) {
                     switch (_context5.prev = _context5.next) {
                         case 0:
+                            console.log(req.user._id);
                             bidId = req.params.bidId;
                             bricolId = req.params.bricolId;
-                            _context5.next = 4;
+                            _context5.next = 5;
                             return _bid2.default.findById(bidId);
 
-                        case 4:
+                        case 5:
                             bidDetails = _context5.sent;
 
                             if (bidDetails) {
-                                _context5.next = 7;
+                                _context5.next = 8;
                                 break;
                             }
 
                             return _context5.abrupt('return', next(new _ApiError2.default(404)));
 
-                        case 7:
-                            _context5.next = 9;
+                        case 8:
+                            _context5.next = 10;
                             return _bricole2.default.findById(bricolId);
 
-                        case 9:
+                        case 10:
                             bricolDetails = _context5.sent;
 
                             if (bricolDetails) {
-                                _context5.next = 12;
+                                _context5.next = 13;
                                 break;
                             }
 
                             return _context5.abrupt('return', next(new _ApiError2.default(404)));
 
-                        case 12:
+                        case 13:
                             userId = req.user._id;
 
                             if (userId == bricolDetails.user) {
-                                _context5.next = 15;
+                                _context5.next = 16;
                                 break;
                             }
 
                             return _context5.abrupt('return', next(new _ApiError2.default(403, 'not access to this resource')));
 
-                        case 15:
-                            //update bricol details 
+                        case 16:
+                            //  update bricol details 
                             bricolDetails.status = "assigned";
                             bricolDetails.bricoler = bidDetails.user;
-                            _context5.next = 19;
+                            _context5.next = 20;
                             return bricolDetails.save();
 
-                        case 19:
+                        case 20:
                             console.log(bricolDetails.bricoler);
                             //update bid 
                             bidDetails.status = 'accepted';
-                            _context5.next = 23;
+                            _context5.next = 24;
                             return bidDetails.save();
 
-                        case 23:
+                        case 24:
+
+                            //update bricole history 
+                            historyQuery = {
+                                serviceType: 'bricol',
+                                service: bricolDetails.id,
+                                user: bricolDetails.user
+                            };
+                            _context5.next = 27;
+                            return _history2.default.findOne(historyQuery);
+
+                        case 27:
+                            historyDoc = _context5.sent;
+
+                            console.log(historyDoc);
+                            historyDoc.status = "assigned";
+                            _context5.next = 32;
+                            return bidDetails.save();
+
+                        case 32:
+                            console.log(historyDoc.status);
                             return _context5.abrupt('return', res.status(204).end());
 
-                        case 24:
+                        case 34:
                         case 'end':
                             return _context5.stop();
                     }

@@ -1,6 +1,7 @@
 import Bricol from '../models/bricole.model';
 import User from '../models/user.model';
 import Bid from '../models/bid.model';
+import History from '../models/history.model';
 import mongoose from 'mongoose';
 import ApiResponse from '../helpers/ApiResponse';
 import ApiError from '../helpers/ApiError';
@@ -55,6 +56,15 @@ export default {
             let createdDoc = await Bricol.findById(newDoc.id)
                 .populate('user')
                 .populate('job')
+            //create history doc 
+            let historyObject = {
+                serviceType: 'bricol',
+                service: createdDoc.id,
+                user: createdDoc.user,
+                status : 'pendding'
+            }
+            let historyDoc = await History.create(historyObject);
+            console.log(historyDoc.status)
             return res.status(201).json(createdDoc);
         } catch (err) {
             next(err)
@@ -149,8 +159,8 @@ export default {
 
                 //get count of bids for each bricol
                 let bidQuery = {
-                    bricol: allDocs[x].id, 
-                    bidType : 'bricol'
+                    bricol: allDocs[x].id,
+                    bidType: 'bricol'
                 }
                 let countOfBids = await Bid.count(bidQuery)
                 result.push({ bricol: allDocs[x], distanceInKm: d, countOfBids })
