@@ -59,31 +59,33 @@ exports.default = {
                         case 9:
                             query = {};
 
+                            if (req.query.status) query.status = req.query.status;
+                            if (req.query.serviceype) query.serviceType = req.query.serviceype;
                             query.bricoler = bricolerId;
-                            _context.next = 13;
+                            _context.next = 15;
                             return _history2.default.find(query).populate('service').populate('bricoler').populate('user').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
 
-                        case 13:
+                        case 15:
                             allDoc = _context.sent;
-                            _context.next = 16;
+                            _context.next = 18;
                             return _history2.default.count(query);
 
-                        case 16:
+                        case 18:
                             count = _context.sent;
                             return _context.abrupt('return', res.send(new _ApiResponse2.default(allDoc, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 20:
-                            _context.prev = 20;
+                        case 22:
+                            _context.prev = 22;
                             _context.t0 = _context['catch'](0);
 
                             next(_context.t0);
 
-                        case 23:
+                        case 25:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 20]]);
+            }, _callee, _this, [[0, 22]]);
         }))();
     },
 
@@ -118,31 +120,33 @@ exports.default = {
                         case 9:
                             query = {};
 
+                            if (req.query.status) query.status = req.query.status;
+                            if (req.query.serviceype) query.serviceType = req.query.serviceype;
                             query.user = userId;
-                            _context2.next = 13;
+                            _context2.next = 15;
                             return _history2.default.find(query).populate('service').populate('bricoler').populate('user').skip((page - 1) * limit).limit(limit).sort({ creationDate: -1 });
 
-                        case 13:
+                        case 15:
                             allDoc = _context2.sent;
-                            _context2.next = 16;
+                            _context2.next = 18;
                             return _history2.default.count(query);
 
-                        case 16:
+                        case 18:
                             count = _context2.sent;
                             return _context2.abrupt('return', res.send(new _ApiResponse2.default(allDoc, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 20:
-                            _context2.prev = 20;
+                        case 22:
+                            _context2.prev = 22;
                             _context2.t0 = _context2['catch'](0);
 
                             next(_context2.t0);
 
-                        case 23:
+                        case 25:
                         case 'end':
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2, [[0, 20]]);
+            }, _callee2, _this2, [[0, 22]]);
         }))();
     }
 };

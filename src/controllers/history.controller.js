@@ -18,6 +18,10 @@ export default {
             if (!userDetails)
                 return res.status(404).end();
             let query = {}
+            if (req.query.status)
+                query.status = req.query.status;
+            if (req.query.serviceype)
+                query.serviceType = req.query.serviceype;
             query.bricoler = bricolerId;
             let allDoc = await History.find(query)
                 .populate('service')
@@ -36,7 +40,7 @@ export default {
                 req
             ))
 
-            
+
         } catch (err) {
             next(err)
         }
@@ -54,6 +58,10 @@ export default {
             if (!userDetails)
                 return res.status(404).end();
             let query = {}
+            if (req.query.status)
+                query.status = req.query.status;
+            if (req.query.serviceype)
+                query.serviceType = req.query.serviceype;
             query.user = userId;
             let allDoc = await History.find(query)
                 .populate('service')
