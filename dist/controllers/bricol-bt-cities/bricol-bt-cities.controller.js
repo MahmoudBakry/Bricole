@@ -18,6 +18,10 @@ var _user = require('../../models/user.model');
 
 var _user2 = _interopRequireDefault(_user);
 
+var _history = require('../../models/history.model');
+
+var _history2 = _interopRequireDefault(_history);
+
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -59,7 +63,7 @@ exports.default = {
         var _this = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var validationErrors, x, newDoc, newDocDetails;
+            var validationErrors, x, newDoc, newDocDetails, historyObject, historyDoc;
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
@@ -116,20 +120,36 @@ exports.default = {
 
                         case 23:
                             newDocDetails = _context.sent;
-                            return _context.abrupt('return', res.status(201).json(newDocDetails));
+
+
+                            //create history doc 
+                            historyObject = {
+                                serviceType: 'bricol-bt-cities',
+                                service: newDocDetails.id,
+                                user: newDocDetails.user
+                            };
+                            _context.next = 27;
+                            return _history2.default.create(historyObject);
 
                         case 27:
-                            _context.prev = 27;
+                            historyDoc = _context.sent;
+
+                            console.log(historyDoc.id);
+                            //return result 
+                            return _context.abrupt('return', res.status(201).json(newDocDetails));
+
+                        case 32:
+                            _context.prev = 32;
                             _context.t2 = _context['catch'](0);
 
                             next(_context.t2);
 
-                        case 30:
+                        case 35:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 27]]);
+            }, _callee, _this, [[0, 32]]);
         }))();
     },
 

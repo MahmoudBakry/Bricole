@@ -12,6 +12,10 @@ var _bricoler = require('../controllers/bricoler/bricoler.controller');
 
 var _bricoler2 = _interopRequireDefault(_bricoler);
 
+var _history = require('../controllers/history.controller');
+
+var _history2 = _interopRequireDefault(_history);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -56,6 +60,11 @@ router.route('/bricolers/:bricolerId/bricols-bt-city').get(requireAuth, _user2.d
 router.route('/bricolers/:bricolerId/bricols').get(requireAuth, _user2.default.fetchAllBricolOfOneBricoler);
 
 router.route('/bricolers/:bricolerId/bricols-statistics').get(requireAuth, _user2.default.countNumberOfBricolsOfBricoler);
+
+//history
+router.route('/bricolers/:bricolerId/history').get(requireAuth, _history2.default.retriveHistoryOfBricoler);
+
+router.route('/users/:userId/history').get(requireAuth, _history2.default.retriveHistoryOfUser);
 
 exports.default = router;
 //# sourceMappingURL=user.route.js.map

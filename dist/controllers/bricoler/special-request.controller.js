@@ -12,6 +12,10 @@ var _specialRequest = require('../../models/special-request.model');
 
 var _specialRequest2 = _interopRequireDefault(_specialRequest);
 
+var _history = require('../../models/history.model');
+
+var _history2 = _interopRequireDefault(_history);
+
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -51,7 +55,7 @@ exports.default = {
         var _this = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var validationErrors, bricolerId, x, lang, lat, requestLocation, newDoc, createdDoc;
+            var validationErrors, bricolerId, x, lang, lat, requestLocation, newDoc, createdDoc, historyObject, historyDoc;
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
@@ -128,20 +132,35 @@ exports.default = {
 
                         case 32:
                             createdDoc = _context.sent;
-                            return _context.abrupt('return', res.status(201).json(createdDoc));
+
+
+                            //create history doc 
+                            historyObject = {
+                                serviceType: 'special-request',
+                                service: createdDoc.id,
+                                user: createdDoc.user,
+                                bricoler: createdDoc.bricoler,
+                                status: 'pendding'
+                            };
+                            _context.next = 36;
+                            return _history2.default.create(historyObject);
 
                         case 36:
-                            _context.prev = 36;
+                            historyDoc = _context.sent;
+                            return _context.abrupt('return', res.status(201).json(createdDoc));
+
+                        case 40:
+                            _context.prev = 40;
                             _context.t2 = _context['catch'](0);
 
                             next(_context.t2);
 
-                        case 39:
+                        case 43:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 36]]);
+            }, _callee, _this, [[0, 40]]);
         }))();
     },
 
@@ -203,7 +222,7 @@ exports.default = {
         var _this3 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-            var bricolerId, bricolerDetails, requestId, requestDetails, newDoc;
+            var bricolerId, bricolerDetails, requestId, requestDetails, newDoc, historyQuery, historyDoc;
             return regeneratorRuntime.wrap(function _callee3$(_context3) {
                 while (1) {
                     switch (_context3.prev = _context3.next) {
@@ -246,20 +265,41 @@ exports.default = {
 
                         case 18:
                             newDoc = _context3.sent;
-                            return _context3.abrupt('return', res.status(200).json(newDoc));
+
+
+                            //update bricole history 
+                            historyQuery = {
+                                serviceType: 'special-request',
+                                service: requestDetails.id,
+                                user: requestDetails.user,
+                                bricoler: requestDetails.bricoler
+                            };
+                            _context3.next = 22;
+                            return _history2.default.findOne(historyQuery);
 
                         case 22:
-                            _context3.prev = 22;
+                            historyDoc = _context3.sent;
+
+                            console.log(historyDoc);
+                            historyDoc.status = "accepted";
+                            _context3.next = 27;
+                            return historyDoc.save();
+
+                        case 27:
+                            return _context3.abrupt('return', res.status(200).json(newDoc));
+
+                        case 30:
+                            _context3.prev = 30;
                             _context3.t0 = _context3['catch'](0);
 
                             next(_context3.t0);
 
-                        case 25:
+                        case 33:
                         case 'end':
                             return _context3.stop();
                     }
                 }
-            }, _callee3, _this3, [[0, 22]]);
+            }, _callee3, _this3, [[0, 30]]);
         }))();
     },
 
@@ -268,7 +308,7 @@ exports.default = {
         var _this4 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-            var bricolerId, bricolerDetails, requestId, requestDetails, newDoc;
+            var bricolerId, bricolerDetails, requestId, requestDetails, newDoc, historyQuery, historyDoc;
             return regeneratorRuntime.wrap(function _callee4$(_context4) {
                 while (1) {
                     switch (_context4.prev = _context4.next) {
@@ -311,20 +351,41 @@ exports.default = {
 
                         case 18:
                             newDoc = _context4.sent;
-                            return _context4.abrupt('return', res.status(200).json(newDoc));
+
+
+                            //update bricole history 
+                            historyQuery = {
+                                serviceType: 'special-request',
+                                service: requestDetails.id,
+                                user: requestDetails.user,
+                                bricoler: requestDetails.bricoler
+                            };
+                            _context4.next = 22;
+                            return _history2.default.findOne(historyQuery);
 
                         case 22:
-                            _context4.prev = 22;
+                            historyDoc = _context4.sent;
+
+                            console.log(historyDoc);
+                            historyDoc.status = "ignored";
+                            _context4.next = 27;
+                            return historyDoc.save();
+
+                        case 27:
+                            return _context4.abrupt('return', res.status(200).json(newDoc));
+
+                        case 30:
+                            _context4.prev = 30;
                             _context4.t0 = _context4['catch'](0);
 
                             next(_context4.t0);
 
-                        case 25:
+                        case 33:
                         case 'end':
                             return _context4.stop();
                     }
                 }
-            }, _callee4, _this4, [[0, 22]]);
+            }, _callee4, _this4, [[0, 30]]);
         }))();
     }
 };

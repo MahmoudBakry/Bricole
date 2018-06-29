@@ -26,7 +26,10 @@ router.route('/').post((0, _multer.multerSaveTo)('bricolBtCities').array('imgs')
 
 router.route('/:bricolId').get(_bricolBtCities2.default.retriveOneBricoleDetails);
 
+//routes for bids 
 router.route('/:bricolId/bids/:bidId/accepted').put(_bidBricolBtCity2.default.accepptBid);
+
+router.route('/:bricolId/bids/:bidId/in-progress').put(_bidBricolBtCity2.default.makeBricolInProgress);
 
 exports.default = router;
 //# sourceMappingURL=bricol-bt-cities.routes.js.map

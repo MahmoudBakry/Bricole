@@ -14,8 +14,12 @@ router.route('/')
 router.route('/:bricolId')
     .get(BricolBtCityController.retriveOneBricoleDetails)
 
+//routes for bids 
 router.route('/:bricolId/bids/:bidId/accepted')
     .put(BidController.accepptBid)
+
+router.route('/:bricolId/bids/:bidId/in-progress')
+    .put(BidController.makeBricolInProgress)
 
 
 export default router;

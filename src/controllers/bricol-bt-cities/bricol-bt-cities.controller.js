@@ -1,6 +1,7 @@
 import BricolBtCities from '../../models/bricol-bt-cities.model';
 import Bid from '../../models/bid.model';
 import User from '../../models/user.model';
+import History from '../../models/history.model';
 import mongoose from 'mongoose';
 import ApiResponse from '../../helpers/ApiResponse';
 import ApiError from '../../helpers/ApiError';
@@ -38,12 +39,22 @@ export default {
                 for (let x = 0; x < req.files.length; x++) {
                     req.body.imgs.push(await toImgUrl(req.files[x]))
                 }
-            } 
+            }
             req.body.dueDate = parseInt(req.body.dueDate)
             req.body.user = req.user._id;
             let newDoc = await BricolBtCities.create(req.body);
             let newDocDetails = await BricolBtCities.findById(newDoc.id)
                 .populate('user')
+
+            //create history doc 
+            let historyObject = {
+                serviceType: 'bricol-bt-cities',
+                service: newDocDetails.id,
+                user: newDocDetails.user,
+            }
+            let historyDoc = await History.create(historyObject);
+            console.log(historyDoc.id)
+            //return result 
             return res.status(201).json(newDocDetails);
         } catch (err) {
             next(err)
@@ -106,7 +117,7 @@ export default {
             let sort = {}
             sort.creationDate = -1;
             if (req.query.maxPrice) {
-               
+
                 sort.budget = -1;
             }
 
@@ -129,12 +140,12 @@ export default {
                 //get count of bids for each bricol
                 let bidQuery = {
                     bricol: allDocs[x].id,
-                    bidType : 'bricol-bt-cities'
+                    bidType: 'bricol-bt-cities'
                 }
                 let countOfBids = await Bid.count(bidQuery)
                 result.push({ bricol: allDocs[x], countOfBids })
             }
-
+            //return result
             let count = await BricolBtCities.count(query);
             return res.send(new ApiResponse(
                 result,

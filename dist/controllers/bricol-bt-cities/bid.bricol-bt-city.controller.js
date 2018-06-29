@@ -16,6 +16,10 @@ var _user = require('../../models/user.model');
 
 var _user2 = _interopRequireDefault(_user);
 
+var _history = require('../../models/history.model');
+
+var _history2 = _interopRequireDefault(_history);
+
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -162,7 +166,7 @@ exports.default = {
         var _this3 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-            var bidId, bricolId, bidDetails, bricolDetails, userId;
+            var bidId, bricolId, bidDetails, bricolDetails, userId, historyQuery, historyDoc;
             return regeneratorRuntime.wrap(function _callee3$(_context3) {
                 while (1) {
                     switch (_context3.prev = _context3.next) {
@@ -221,14 +225,142 @@ exports.default = {
                             return bidDetails.save();
 
                         case 23:
+
+                            //update bricole history 
+                            historyQuery = {
+                                serviceType: 'bricol-bt-cities',
+                                service: bricolDetails.id,
+                                user: bricolDetails.user
+                            };
+                            _context3.next = 26;
+                            return _history2.default.findOne(historyQuery);
+
+                        case 26:
+                            historyDoc = _context3.sent;
+
+                            console.log(historyDoc);
+                            historyDoc.status = "assigned";
+                            historyDoc.bricoler = bidDetails.user;
+                            _context3.next = 32;
+                            return historyDoc.save();
+
+                        case 32:
+                            _context3.t0 = console;
+                            _context3.next = 35;
+                            return _history2.default.findOne(historyQuery);
+
+                        case 35:
+                            _context3.t1 = _context3.sent;
+
+                            _context3.t0.log.call(_context3.t0, _context3.t1);
+
                             return _context3.abrupt('return', res.status(204).end());
 
-                        case 24:
+                        case 38:
                         case 'end':
                             return _context3.stop();
                     }
                 }
             }, _callee3, _this3);
+        }))();
+    },
+
+
+    //make bricole in progress  
+    makeBricolInProgress: function makeBricolInProgress(req, res, next) {
+        var _this4 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+            var bidId, bricolId, bidDetails, bricolDetails, userId, historyQuery, historyDoc;
+            return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                while (1) {
+                    switch (_context4.prev = _context4.next) {
+                        case 0:
+                            bidId = req.params.bidId;
+                            bricolId = req.params.bricolId;
+                            _context4.next = 4;
+                            return _bid2.default.findById(bidId);
+
+                        case 4:
+                            bidDetails = _context4.sent;
+
+                            if (bidDetails) {
+                                _context4.next = 7;
+                                break;
+                            }
+
+                            return _context4.abrupt('return', next(new _ApiError2.default(404)));
+
+                        case 7:
+                            _context4.next = 9;
+                            return _bricolBtCities2.default.findById(bricolId);
+
+                        case 9:
+                            bricolDetails = _context4.sent;
+
+                            if (bricolDetails) {
+                                _context4.next = 12;
+                                break;
+                            }
+
+                            return _context4.abrupt('return', next(new _ApiError2.default(404)));
+
+                        case 12:
+                            userId = req.user._id;
+
+                            if (userId == bricolDetails.user) {
+                                _context4.next = 15;
+                                break;
+                            }
+
+                            return _context4.abrupt('return', next(new _ApiError2.default(403, 'not access to this resource')));
+
+                        case 15:
+
+                            //update bricol details 
+                            bricolDetails.status = "inProgress";
+                            _context4.next = 18;
+                            return bricolDetails.save();
+
+                        case 18:
+                            console.log(bricolDetails.bricoler);
+
+                            //update bricole history 
+                            historyQuery = {
+                                serviceType: 'bricol-bt-cities',
+                                service: bricolDetails.id,
+                                user: bricolDetails.user
+                            };
+                            _context4.next = 22;
+                            return _history2.default.findOne(historyQuery);
+
+                        case 22:
+                            historyDoc = _context4.sent;
+
+                            console.log(historyDoc);
+                            historyDoc.status = "inProgress";
+                            historyDoc.bricoler = bidDetails.user;
+                            _context4.next = 28;
+                            return historyDoc.save();
+
+                        case 28:
+                            _context4.t0 = console;
+                            _context4.next = 31;
+                            return _history2.default.findOne(historyQuery);
+
+                        case 31:
+                            _context4.t1 = _context4.sent;
+
+                            _context4.t0.log.call(_context4.t0, _context4.t1);
+
+                            return _context4.abrupt('return', res.status(204).end());
+
+                        case 34:
+                        case 'end':
+                            return _context4.stop();
+                    }
+                }
+            }, _callee4, _this4);
         }))();
     }
 };

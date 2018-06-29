@@ -127,7 +127,7 @@ export default {
         let userId = req.user._id;
         if (!(userId == bricolDetails.user))
             return next(new ApiError(403, 'not access to this resource'))
-      //  update bricol details 
+        //  update bricol details 
         bricolDetails.status = "assigned";
         bricolDetails.bricoler = bidDetails.user;
         await bricolDetails.save();
@@ -145,8 +145,10 @@ export default {
         let historyDoc = await History.findOne(historyQuery);
         console.log(historyDoc)
         historyDoc.status = "assigned";
-        await bidDetails.save();
-        console.log(historyDoc.status);
+        historyDoc.bricoler = bidDetails.user;
+        await historyDoc.save();
+        console.log( await History.findOne(historyQuery));
+        //return result
         return res.status(204).end();
 
     },
@@ -199,6 +201,18 @@ export default {
         bricolDetails.status = 'inProgress';
         await bricolDetails.save();
 
+        //update bricole history 
+        let historyQuery = {
+            serviceType: 'bricol',
+            service: bricolDetails.id,
+            user: bricolDetails.user,
+        }
+        let historyDoc = await History.findOne(historyQuery);
+        console.log(historyDoc)
+        historyDoc.status = "inProgress";
+        await historyDoc.save();
+        
+        //return responce 
         return res.status(204).end();
 
     },

@@ -1,5 +1,6 @@
 import UserController from '../controllers/user.controller';
 import BricolerController from '../controllers/bricoler/bricoler.controller';
+import HistoryController from '../controllers/history.controller';
 import express from 'express';
 import passport from 'passport';
 import passportService from '../services/passport';
@@ -52,6 +53,12 @@ router.route('/bricolers/:bricolerId/bricols')
 router.route('/bricolers/:bricolerId/bricols-statistics')
     .get(requireAuth, UserController.countNumberOfBricolsOfBricoler)
 
+//history
+router.route('/bricolers/:bricolerId/history')
+    .get(requireAuth, HistoryController.retriveHistoryOfBricoler)
+
+router.route('/users/:userId/history')
+    .get(requireAuth, HistoryController.retriveHistoryOfUser)
 
 export default router;
 

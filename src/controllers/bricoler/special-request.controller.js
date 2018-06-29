@@ -1,5 +1,6 @@
 import User from '../../models/user.model';
 import SpecialRequest from '../../models/special-request.model';
+import History from '../../models/history.model';
 import mongoose from 'mongoose';
 import ApiResponse from '../../helpers/ApiResponse';
 import ApiError from '../../helpers/ApiError';
@@ -52,6 +53,16 @@ export default {
                 .populate('user')
                 .populate('bricoler')
 
+            //create history doc 
+            let historyObject = {
+                serviceType: 'special-request',
+                service: createdDoc.id,
+                user: createdDoc.user,
+                bricoler: createdDoc.bricoler,
+                status: 'pendding'
+            }
+            let historyDoc = await History.create(historyObject);
+
             return res.status(201).json(createdDoc);
 
         } catch (err) {
@@ -102,14 +113,27 @@ export default {
                 .populate('user')
                 .populate('bricoler')
 
+            //update bricole history 
+            let historyQuery = {
+                serviceType: 'special-request',
+                service: requestDetails.id,
+                user: requestDetails.user,
+                bricoler: requestDetails.bricoler
+            }
+            let historyDoc = await History.findOne(historyQuery);
+            console.log(historyDoc)
+            historyDoc.status = "accepted";
+            await historyDoc.save();
+
+            //return responce 
             return res.status(200).json(newDoc);
 
         } catch (err) {
             next(err)
         }
     },
-      //ignore request by bricoler 
-      async ignoreRequst(req, res, next) {
+    //ignore request by bricoler 
+    async ignoreRequst(req, res, next) {
         try {
 
             let bricolerId = req.params.bricolerId;
@@ -132,6 +156,18 @@ export default {
                 .populate('user')
                 .populate('bricoler')
 
+            //update bricole history 
+            let historyQuery = {
+                serviceType: 'special-request',
+                service: requestDetails.id,
+                user: requestDetails.user,
+                bricoler: requestDetails.bricoler
+            }
+            let historyDoc = await History.findOne(historyQuery);
+            console.log(historyDoc)
+            historyDoc.status = "ignored";
+            await historyDoc.save();
+            //return responce 
             return res.status(200).json(newDoc);
 
         } catch (err) {

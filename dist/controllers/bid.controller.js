@@ -341,14 +341,23 @@ exports.default = {
 
                             console.log(historyDoc);
                             historyDoc.status = "assigned";
-                            _context5.next = 32;
-                            return bidDetails.save();
+                            historyDoc.bricoler = bidDetails.user;
+                            _context5.next = 33;
+                            return historyDoc.save();
 
-                        case 32:
-                            console.log(historyDoc.status);
+                        case 33:
+                            _context5.t0 = console;
+                            _context5.next = 36;
+                            return _history2.default.findOne(historyQuery);
+
+                        case 36:
+                            _context5.t1 = _context5.sent;
+
+                            _context5.t0.log.call(_context5.t0, _context5.t1);
+
                             return _context5.abrupt('return', res.status(204).end());
 
-                        case 34:
+                        case 39:
                         case 'end':
                             return _context5.stop();
                     }
@@ -431,7 +440,7 @@ exports.default = {
         var _this7 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
-            var bidId, bricolId, bidDetails, bricolDetails, userId;
+            var bidId, bricolId, bidDetails, bricolDetails, userId, historyQuery, historyDoc;
             return regeneratorRuntime.wrap(function _callee7$(_context7) {
                 while (1) {
                     switch (_context7.prev = _context7.next) {
@@ -484,9 +493,28 @@ exports.default = {
                             return bricolDetails.save();
 
                         case 19:
+
+                            //update bricole history 
+                            historyQuery = {
+                                serviceType: 'bricol',
+                                service: bricolDetails.id,
+                                user: bricolDetails.user
+                            };
+                            _context7.next = 22;
+                            return _history2.default.findOne(historyQuery);
+
+                        case 22:
+                            historyDoc = _context7.sent;
+
+                            console.log(historyDoc);
+                            historyDoc.status = "inProgress";
+                            _context7.next = 27;
+                            return historyDoc.save();
+
+                        case 27:
                             return _context7.abrupt('return', res.status(204).end());
 
-                        case 20:
+                        case 28:
                         case 'end':
                             return _context7.stop();
                     }

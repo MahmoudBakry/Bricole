@@ -1,6 +1,7 @@
 import Bid from '../../models/bid.model';
 import BricolBtCities from '../../models/bricol-bt-cities.model';
 import User from '../../models/user.model';
+import History from '../../models/history.model';
 import mongoose from 'mongoose';
 import ApiResponse from '../../helpers/ApiResponse';
 import ApiError from '../../helpers/ApiError';
@@ -101,6 +102,60 @@ export default {
         bidDetails.status = 'accepted';
         await bidDetails.save();
 
+        //update bricole history 
+        let historyQuery = {
+            serviceType: 'bricol-bt-cities',
+            service: bricolDetails.id,
+            user: bricolDetails.user,
+        }
+        let historyDoc = await History.findOne(historyQuery);
+        console.log(historyDoc)
+        historyDoc.status = "assigned";
+        historyDoc.bricoler = bidDetails.user;
+        await historyDoc.save();
+        console.log(await History.findOne(historyQuery));
+
+        //return result
+        return res.status(204).end();
+
+    },
+
+    //make bricole in progress  
+    async makeBricolInProgress(req, res, next) {
+        let bidId = req.params.bidId;
+        let bricolId = req.params.bricolId;
+
+        let bidDetails = await Bid.findById(bidId);
+        if (!bidDetails)
+            return next(new ApiError(404));
+
+        let bricolDetails = await BricolBtCities.findById(bricolId);
+        if (!bricolDetails)
+            return next(new ApiError(404));
+
+        let userId = req.user._id;
+        if (!(userId == bricolDetails.user))
+            return next(new ApiError(403, 'not access to this resource'))
+
+        //update bricol details 
+        bricolDetails.status = "inProgress";
+        await bricolDetails.save();
+        console.log(bricolDetails.bricoler)
+
+        //update bricole history 
+        let historyQuery = {
+            serviceType: 'bricol-bt-cities',
+            service: bricolDetails.id,
+            user: bricolDetails.user,
+        }
+        let historyDoc = await History.findOne(historyQuery);
+        console.log(historyDoc)
+        historyDoc.status = "inProgress";
+        historyDoc.bricoler = bidDetails.user;
+        await historyDoc.save();
+        console.log(await History.findOne(historyQuery));
+
+        //return result
         return res.status(204).end();
 
     },
