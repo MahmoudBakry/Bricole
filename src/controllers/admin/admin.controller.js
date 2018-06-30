@@ -49,4 +49,17 @@ export default {
         }
     },
 
+    //rertive all bricols 
+    async fechAllBricols(req, res, next) {
+        try {
+            let allDocs = await Bricol.find()
+                .populate('user')
+                .populate('bricoler')
+                .populate('job').sort({creationDate : -1})
+            return res.status(200).json(allDocs);
+        } catch (err) {
+            next(err)
+        }
+    },
+
 }

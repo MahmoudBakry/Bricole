@@ -11,4 +11,7 @@ router.route('/statistics')
 router.route('/users')
     .get(AdminController.retriveAllUsers)
 
+router.route('/bricols')
+    .get(AdminController.fechAllBricols)
+
 export default router;

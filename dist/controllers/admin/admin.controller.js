@@ -143,6 +143,40 @@ exports.default = {
                 }
             }, _callee2, _this2, [[0, 9]]);
         }))();
+    },
+
+
+    //rertive all bricols 
+    fechAllBricols: function fechAllBricols(req, res, next) {
+        var _this3 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+            var allDocs;
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                    switch (_context3.prev = _context3.next) {
+                        case 0:
+                            _context3.prev = 0;
+                            _context3.next = 3;
+                            return _bricole2.default.find().populate('user').populate('bricoler').populate('job').sort({ creationDate: -1 });
+
+                        case 3:
+                            allDocs = _context3.sent;
+                            return _context3.abrupt('return', res.status(200).json(allDocs));
+
+                        case 7:
+                            _context3.prev = 7;
+                            _context3.t0 = _context3['catch'](0);
+
+                            next(_context3.t0);
+
+                        case 10:
+                        case 'end':
+                            return _context3.stop();
+                    }
+                }
+            }, _callee3, _this3, [[0, 7]]);
+        }))();
     }
 };
 //# sourceMappingURL=admin.controller.js.map

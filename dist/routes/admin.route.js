@@ -25,5 +25,7 @@ router.route('/statistics').get(_admin2.default.retriveSomeNumbers);
 
 router.route('/users').get(_admin2.default.retriveAllUsers);
 
+router.route('/bricols').get(_admin2.default.fechAllBricols);
+
 exports.default = router;
 //# sourceMappingURL=admin.route.js.map
