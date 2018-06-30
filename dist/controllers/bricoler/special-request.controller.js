@@ -75,7 +75,7 @@ exports.default = {
                             //prepare data 
 
                             if (!(req.files.length > 0)) {
-                                _context.next = 19;
+                                _context.next = 17;
                                 break;
                             }
 
@@ -103,13 +103,6 @@ exports.default = {
                             break;
 
                         case 17:
-                            _context.next = 20;
-                            break;
-
-                        case 19:
-                            return _context.abrupt('return', next(new _ApiError2.default(422, "imgs are required")));
-
-                        case 20:
                             lang = req.body.lang; //long
 
                             lat = req.body.lat; //lat
@@ -122,15 +115,15 @@ exports.default = {
                             req.body.bricoler = bricolerId;
 
                             //create new doc 
-                            _context.next = 29;
+                            _context.next = 26;
                             return _specialRequest2.default.create(req.body);
 
-                        case 29:
+                        case 26:
                             newDoc = _context.sent;
-                            _context.next = 32;
+                            _context.next = 29;
                             return _specialRequest2.default.findById(newDoc.id).populate('user').populate('bricoler');
 
-                        case 32:
+                        case 29:
                             createdDoc = _context.sent;
 
 
@@ -142,25 +135,25 @@ exports.default = {
                                 bricoler: createdDoc.bricoler,
                                 status: 'pendding'
                             };
-                            _context.next = 36;
+                            _context.next = 33;
                             return _history2.default.create(historyObject);
 
-                        case 36:
+                        case 33:
                             historyDoc = _context.sent;
                             return _context.abrupt('return', res.status(201).json(createdDoc));
 
-                        case 40:
-                            _context.prev = 40;
+                        case 37:
+                            _context.prev = 37;
                             _context.t2 = _context['catch'](0);
 
                             next(_context.t2);
 
-                        case 43:
+                        case 40:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 40]]);
+            }, _callee, _this, [[0, 37]]);
         }))();
     },
 

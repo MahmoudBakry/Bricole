@@ -37,8 +37,7 @@ export default {
                 for (let x = 0; x < req.files.length; x++) {
                     req.body.imgs.push(await toImgUrl(req.files[x]))
                 }
-            } else
-                return next(new ApiError(422, "imgs are required"))
+            }
             let lang = req.body.lang;   //long
             let lat = req.body.lat;//lat
             let requestLocation = [lang, lat] //modify location 
