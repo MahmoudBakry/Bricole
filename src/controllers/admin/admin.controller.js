@@ -55,7 +55,7 @@ export default {
             let allDocs = await Bricol.find()
                 .populate('user')
                 .populate('bricoler')
-                .populate('job').sort({creationDate : -1})
+                .populate('job').sort({ creationDate: -1 })
             return res.status(200).json(allDocs);
         } catch (err) {
             next(err)
@@ -68,7 +68,20 @@ export default {
             let allDocs = await BricolBtCity.find()
                 .populate('user')
                 .populate('bricoler')
-                .populate('job').sort({creationDate : -1})
+                .populate('job').sort({ creationDate: -1 })
+            return res.status(200).json(allDocs);
+        } catch (err) {
+            next(err)
+        }
+    },
+
+    //retrive all users that have complete profile 
+    async fetchCompleteProfileUsers(req, res, next) {
+        try {
+            let allDocs = await User.find({ completed: true })
+                .populate('jobs')
+                .populate('city')
+                .sort({ creationDate: -1 })
             return res.status(200).json(allDocs);
         } catch (err) {
             next(err)

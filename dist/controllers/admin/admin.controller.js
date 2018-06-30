@@ -211,6 +211,40 @@ exports.default = {
                 }
             }, _callee4, _this4, [[0, 7]]);
         }))();
+    },
+
+
+    //retrive all users that have complete profile 
+    fetchCompleteProfileUsers: function fetchCompleteProfileUsers(req, res, next) {
+        var _this5 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+            var allDocs;
+            return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                while (1) {
+                    switch (_context5.prev = _context5.next) {
+                        case 0:
+                            _context5.prev = 0;
+                            _context5.next = 3;
+                            return _user2.default.find({ completed: true }).populate('jobs').populate('city').sort({ creationDate: -1 });
+
+                        case 3:
+                            allDocs = _context5.sent;
+                            return _context5.abrupt('return', res.status(200).json(allDocs));
+
+                        case 7:
+                            _context5.prev = 7;
+                            _context5.t0 = _context5['catch'](0);
+
+                            next(_context5.t0);
+
+                        case 10:
+                        case 'end':
+                            return _context5.stop();
+                    }
+                }
+            }, _callee5, _this5, [[0, 7]]);
+        }))();
     }
 };
 //# sourceMappingURL=admin.controller.js.map
