@@ -2,6 +2,7 @@ import User from '../../models/user.model';
 import Bricol from '../../models/bricole.model';
 import BricolBtCity from '../../models/bricol-bt-cities.model';
 import Bid from '../../models/bid.model';
+import SpecialReques from '../../models/special-request.model'
 
 import ApiError from '../../helpers/ApiError';
 import ApiResponse from '../../helpers/ApiResponse';
@@ -17,6 +18,7 @@ export default {
             let numberOfUsers = await User.count();
             let numberOfBricolsInCity = await Bricol.count();
             let numberOfBricolsBtCity = await BricolBtCity.count();
+            let numberOfSpecialRequest = await SpecialReques.count();
             let numberOfBidInCity = await Bid.count({ bidType: 'bricol' });
             let numberOfBidBetweenCity = await Bid.count({ bidType: 'bricol-bt-cities' });
 
@@ -25,7 +27,8 @@ export default {
                 numberOfBricolsInCity,
                 numberOfBricolsBtCity,
                 numberOfBidInCity,
-                numberOfBidBetweenCity
+                numberOfBidBetweenCity,
+                numberOfSpecialRequest
             })
 
         } catch (err) {
@@ -52,7 +55,11 @@ export default {
     //rertive all bricols 
     async fechAllBricols(req, res, next) {
         try {
-            let allDocs = await Bricol.find()
+            let query = {}
+            if (req.query.status)
+                query.status = req.query.status;
+
+            let allDocs = await Bricol.find(query)
                 .populate('user')
                 .populate('bricoler')
                 .populate('job').sort({ creationDate: -1 })
@@ -65,7 +72,11 @@ export default {
     //rertive all bricols 
     async fechAllBricolsBtCity(req, res, next) {
         try {
-            let allDocs = await BricolBtCity.find()
+            let query = {}
+            if (req.query.status)
+                query.status = req.query.status;
+
+            let allDocs = await BricolBtCity.find(query)
                 .populate('user')
                 .populate('bricoler')
                 .populate('job').sort({ creationDate: -1 })

@@ -22,6 +22,10 @@ var _bid = require('../models/bid.model');
 
 var _bid2 = _interopRequireDefault(_bid);
 
+var _specialRequest = require('../models/special-request.model');
+
+var _specialRequest2 = _interopRequireDefault(_specialRequest);
+
 var _jsonwebtoken = require('jsonwebtoken');
 
 var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
@@ -571,7 +575,7 @@ exports.default = (_validateBody$signUp$ = {
         var _this8 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
-            var userId, userDetails, query, allBricols, penddingBricols, assignedBricols, inProgressBricols, doneBricols, result, btQuery, allBtBricols, penddingBtBricols, assignedBtBricols, inProgressBtBricols, doneBtBricols;
+            var userId, userDetails, query, allBricols, penddingBricols, assignedBricols, inProgressBricols, doneBricols, result, btQuery, allBtBricols, penddingBtBricols, assignedBtBricols, inProgressBtBricols, doneBtBricols, specialRequest;
             return regeneratorRuntime.wrap(function _callee8$(_context8) {
                 while (1) {
                     switch (_context8.prev = _context8.next) {
@@ -684,27 +688,36 @@ exports.default = (_validateBody$signUp$ = {
                                 inProgressBtBricols: inProgressBtBricols,
                                 doneBtBricols: doneBtBricols
                             };
+
+                            _context8.next = 54;
+                            return _specialRequest2.default.count({ user: userId });
+
+                        case 54:
+                            specialRequest = _context8.sent;
+
+                            result.specialRequest = specialRequest;
+
                             return _context8.abrupt('return', res.status(200).json(result));
 
-                        case 55:
-                            _context8.prev = 55;
+                        case 59:
+                            _context8.prev = 59;
                             _context8.t0 = _context8['catch'](0);
 
                             next(_context8.t0);
 
-                        case 58:
+                        case 62:
                         case 'end':
                             return _context8.stop();
                     }
                 }
-            }, _callee8, _this8, [[0, 55]]);
+            }, _callee8, _this8, [[0, 59]]);
         }))();
     }
 }, _defineProperty(_validateBody$signUp$, 'countNumberOfBricolsOfUser', function countNumberOfBricolsOfUser(req, res, next) {
     var _this9 = this;
 
     return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9() {
-        var userId, userDetails, query, allBricols, penddingBricols, assignedBricols, inProgressBricols, doneBricols, result, btQuery, allBtBricols, penddingBtBricols, assignedBtBricols, inProgressBtBricols, doneBtBricols;
+        var userId, userDetails, query, allBricols, penddingBricols, assignedBricols, inProgressBricols, doneBricols, result, btQuery, allBtBricols, penddingBtBricols, assignedBtBricols, inProgressBtBricols, doneBtBricols, specialRequest;
         return regeneratorRuntime.wrap(function _callee9$(_context9) {
             while (1) {
                 switch (_context9.prev = _context9.next) {
@@ -817,26 +830,34 @@ exports.default = (_validateBody$signUp$ = {
                             inProgressBtBricols: inProgressBtBricols,
                             doneBtBricols: doneBtBricols
                         };
+
+                        _context9.next = 54;
+                        return _specialRequest2.default.count({ user: userId });
+
+                    case 54:
+                        specialRequest = _context9.sent;
+
+                        result.specialRequest = specialRequest;
                         return _context9.abrupt('return', res.status(200).json(result));
 
-                    case 55:
-                        _context9.prev = 55;
+                    case 59:
+                        _context9.prev = 59;
                         _context9.t0 = _context9['catch'](0);
 
                         next(_context9.t0);
 
-                    case 58:
+                    case 62:
                     case 'end':
                         return _context9.stop();
                 }
             }
-        }, _callee9, _this9, [[0, 55]]);
+        }, _callee9, _this9, [[0, 59]]);
     }))();
 }), _defineProperty(_validateBody$signUp$, 'countNumberOfBricolsOfBricoler', function countNumberOfBricolsOfBricoler(req, res, next) {
     var _this10 = this;
 
     return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10() {
-        var bricolerId, userDetails, query, allBricols, penddingBricols, assignedBricols, inProgressBricols, doneBricols, result, btQuery, allBtBricols, penddingBtBricols, assignedBtBricols, inProgressBtBricols, doneBtBricols;
+        var bricolerId, userDetails, query, allBricols, penddingBricols, assignedBricols, inProgressBricols, doneBricols, result, btQuery, allBtBricols, penddingBtBricols, assignedBtBricols, inProgressBtBricols, doneBtBricols, specialRequest;
         return regeneratorRuntime.wrap(function _callee10$(_context10) {
             while (1) {
                 switch (_context10.prev = _context10.next) {
@@ -947,20 +968,29 @@ exports.default = (_validateBody$signUp$ = {
                             inProgressBtBricols: inProgressBtBricols,
                             doneBtBricols: doneBtBricols
                         };
+
+                        _context10.next = 54;
+                        return _specialRequest2.default.count({ bricoler: bricolerId });
+
+                    case 54:
+                        specialRequest = _context10.sent;
+
+                        result.specialRequest = specialRequest;
+
                         return _context10.abrupt('return', res.status(200).json(result));
 
-                    case 55:
-                        _context10.prev = 55;
+                    case 59:
+                        _context10.prev = 59;
                         _context10.t0 = _context10['catch'](0);
 
                         next(_context10.t0);
 
-                    case 58:
+                    case 62:
                     case 'end':
                         return _context10.stop();
                 }
             }
-        }, _callee10, _this10, [[0, 55]]);
+        }, _callee10, _this10, [[0, 59]]);
     }))();
 }), _defineProperty(_validateBody$signUp$, 'retriveUserDetails', function retriveUserDetails(req, res, next) {
     var _this11 = this;

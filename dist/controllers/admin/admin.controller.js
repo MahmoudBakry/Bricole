@@ -20,6 +20,10 @@ var _bid = require('../../models/bid.model');
 
 var _bid2 = _interopRequireDefault(_bid);
 
+var _specialRequest = require('../../models/special-request.model');
+
+var _specialRequest2 = _interopRequireDefault(_specialRequest);
+
 var _ApiError = require('../../helpers/ApiError');
 
 var _ApiError2 = _interopRequireDefault(_ApiError);
@@ -39,7 +43,7 @@ exports.default = {
         var _this = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var numberOfUsers, numberOfBricolsInCity, numberOfBricolsBtCity, numberOfBidInCity, numberOfBidBetweenCity;
+            var numberOfUsers, numberOfBricolsInCity, numberOfBricolsBtCity, numberOfSpecialRequest, numberOfBidInCity, numberOfBidBetweenCity;
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
@@ -70,35 +74,41 @@ exports.default = {
                         case 11:
                             numberOfBricolsBtCity = _context.sent;
                             _context.next = 14;
-                            return _bid2.default.count({ bidType: 'bricol' });
+                            return _specialRequest2.default.count();
 
                         case 14:
-                            numberOfBidInCity = _context.sent;
+                            numberOfSpecialRequest = _context.sent;
                             _context.next = 17;
-                            return _bid2.default.count({ bidType: 'bricol-bt-cities' });
+                            return _bid2.default.count({ bidType: 'bricol' });
 
                         case 17:
+                            numberOfBidInCity = _context.sent;
+                            _context.next = 20;
+                            return _bid2.default.count({ bidType: 'bricol-bt-cities' });
+
+                        case 20:
                             numberOfBidBetweenCity = _context.sent;
                             return _context.abrupt('return', res.status(200).json({
                                 numberOfUsers: numberOfUsers,
                                 numberOfBricolsInCity: numberOfBricolsInCity,
                                 numberOfBricolsBtCity: numberOfBricolsBtCity,
                                 numberOfBidInCity: numberOfBidInCity,
-                                numberOfBidBetweenCity: numberOfBidBetweenCity
+                                numberOfBidBetweenCity: numberOfBidBetweenCity,
+                                numberOfSpecialRequest: numberOfSpecialRequest
                             }));
 
-                        case 21:
-                            _context.prev = 21;
+                        case 24:
+                            _context.prev = 24;
                             _context.t0 = _context['catch'](0);
 
                             next(_context.t0);
 
-                        case 24:
+                        case 27:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 21]]);
+            }, _callee, _this, [[0, 24]]);
         }))();
     },
 
@@ -151,31 +161,35 @@ exports.default = {
         var _this3 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-            var allDocs;
+            var query, allDocs;
             return regeneratorRuntime.wrap(function _callee3$(_context3) {
                 while (1) {
                     switch (_context3.prev = _context3.next) {
                         case 0:
                             _context3.prev = 0;
-                            _context3.next = 3;
-                            return _bricole2.default.find().populate('user').populate('bricoler').populate('job').sort({ creationDate: -1 });
+                            query = {};
 
-                        case 3:
+                            if (req.query.status) query.status = req.query.status;
+
+                            _context3.next = 5;
+                            return _bricole2.default.find(query).populate('user').populate('bricoler').populate('job').sort({ creationDate: -1 });
+
+                        case 5:
                             allDocs = _context3.sent;
                             return _context3.abrupt('return', res.status(200).json(allDocs));
 
-                        case 7:
-                            _context3.prev = 7;
+                        case 9:
+                            _context3.prev = 9;
                             _context3.t0 = _context3['catch'](0);
 
                             next(_context3.t0);
 
-                        case 10:
+                        case 12:
                         case 'end':
                             return _context3.stop();
                     }
                 }
-            }, _callee3, _this3, [[0, 7]]);
+            }, _callee3, _this3, [[0, 9]]);
         }))();
     },
 
@@ -185,31 +199,35 @@ exports.default = {
         var _this4 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-            var allDocs;
+            var query, allDocs;
             return regeneratorRuntime.wrap(function _callee4$(_context4) {
                 while (1) {
                     switch (_context4.prev = _context4.next) {
                         case 0:
                             _context4.prev = 0;
-                            _context4.next = 3;
-                            return _bricolBtCities2.default.find().populate('user').populate('bricoler').populate('job').sort({ creationDate: -1 });
+                            query = {};
 
-                        case 3:
+                            if (req.query.status) query.status = req.query.status;
+
+                            _context4.next = 5;
+                            return _bricolBtCities2.default.find(query).populate('user').populate('bricoler').populate('job').sort({ creationDate: -1 });
+
+                        case 5:
                             allDocs = _context4.sent;
                             return _context4.abrupt('return', res.status(200).json(allDocs));
 
-                        case 7:
-                            _context4.prev = 7;
+                        case 9:
+                            _context4.prev = 9;
                             _context4.t0 = _context4['catch'](0);
 
                             next(_context4.t0);
 
-                        case 10:
+                        case 12:
                         case 'end':
                             return _context4.stop();
                     }
                 }
-            }, _callee4, _this4, [[0, 7]]);
+            }, _callee4, _this4, [[0, 9]]);
         }))();
     },
 

@@ -2,6 +2,8 @@ import User from "../models/user.model";
 import Bricol from '../models/bricole.model';
 import BricolBtCity from '../models/bricol-bt-cities.model';
 import Bid from '../models/bid.model';
+import SpecialRequest from '../models/special-request.model';
+
 import jwt from "jsonwebtoken";
 import config from "../config";
 import { body, validationResult } from 'express-validator/check';
@@ -327,6 +329,10 @@ export default {
                 inProgressBtBricols,
                 doneBtBricols
             }
+
+            let specialRequest = await SpecialRequest.count({ user: userId });
+            result.specialRequest = specialRequest;
+
             return res.status(200).json(result);
         } catch (err) {
             next(err)
@@ -380,6 +386,9 @@ export default {
                 inProgressBtBricols,
                 doneBtBricols
             }
+
+            let specialRequest = await SpecialRequest.count({ user: userId });
+            result.specialRequest = specialRequest;
             return res.status(200).json(result);
         } catch (err) {
             next(err)
@@ -431,6 +440,10 @@ export default {
                 inProgressBtBricols,
                 doneBtBricols
             }
+
+            let specialRequest = await SpecialRequest.count({ bricoler: bricolerId });
+            result.specialRequest = specialRequest;
+
             return res.status(200).json(result);
         } catch (err) {
             next(err)
@@ -457,7 +470,7 @@ export default {
         return [
             body("about").exists().withMessage("about is required"),
             //note express validator don't work with mutet
-           // body("portofolio").exists().withMessage("portofolio is required"),
+            // body("portofolio").exists().withMessage("portofolio is required"),
         ];
     },
     //complete profile of user 
@@ -470,15 +483,15 @@ export default {
             let userDetails = await User.findById(userId);
             if (!userDetails)
                 return res.status(404).end();
- 
+
             //prepare data 
             if (req.files.length > 0) {
                 req.body.portofolio = []
                 for (let x = 0; x < req.files.length; x++) {
                     req.body.portofolio.push(await toImgUrl(req.files[x]))
                 }
-            } 
-           await User.findByIdAndUpdate(userId, req.body, {new  : true});
+            }
+            await User.findByIdAndUpdate(userId, req.body, { new: true });
             //assign new attributed value to user object
             // userDetails.about = req.body.about;
             // userDetails.portofolio = req.body.portofolio;
