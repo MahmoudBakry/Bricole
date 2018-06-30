@@ -62,4 +62,17 @@ export default {
         }
     },
 
+    //rertive all bricols 
+    async fechAllBricolsBtCity(req, res, next) {
+        try {
+            let allDocs = await BricolBtCity.find()
+                .populate('user')
+                .populate('bricoler')
+                .populate('job').sort({creationDate : -1})
+            return res.status(200).json(allDocs);
+        } catch (err) {
+            next(err)
+        }
+    },
+
 }

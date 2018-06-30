@@ -27,5 +27,7 @@ router.route('/users').get(_admin2.default.retriveAllUsers);
 
 router.route('/bricols').get(_admin2.default.fechAllBricols);
 
+router.route('/bricols-bt-city').get(_admin2.default.fechAllBricolsBtCity);
+
 exports.default = router;
 //# sourceMappingURL=admin.route.js.map

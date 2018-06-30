@@ -177,6 +177,40 @@ exports.default = {
                 }
             }, _callee3, _this3, [[0, 7]]);
         }))();
+    },
+
+
+    //rertive all bricols 
+    fechAllBricolsBtCity: function fechAllBricolsBtCity(req, res, next) {
+        var _this4 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+            var allDocs;
+            return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                while (1) {
+                    switch (_context4.prev = _context4.next) {
+                        case 0:
+                            _context4.prev = 0;
+                            _context4.next = 3;
+                            return _bricolBtCities2.default.find().populate('user').populate('bricoler').populate('job').sort({ creationDate: -1 });
+
+                        case 3:
+                            allDocs = _context4.sent;
+                            return _context4.abrupt('return', res.status(200).json(allDocs));
+
+                        case 7:
+                            _context4.prev = 7;
+                            _context4.t0 = _context4['catch'](0);
+
+                            next(_context4.t0);
+
+                        case 10:
+                        case 'end':
+                            return _context4.stop();
+                    }
+                }
+            }, _callee4, _this4, [[0, 7]]);
+        }))();
     }
 };
 //# sourceMappingURL=admin.controller.js.map

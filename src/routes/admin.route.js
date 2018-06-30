@@ -14,4 +14,7 @@ router.route('/users')
 router.route('/bricols')
     .get(AdminController.fechAllBricols)
 
+router.route('/bricols-bt-city')
+    .get(AdminController.fechAllBricolsBtCity)
+
 export default router;
