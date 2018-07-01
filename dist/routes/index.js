@@ -40,6 +40,10 @@ var _specialRequest = require('./special-request.route');
 
 var _specialRequest2 = _interopRequireDefault(_specialRequest);
 
+var _trips = require('./trips.route');
+
+var _trips2 = _interopRequireDefault(_trips);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -66,5 +70,7 @@ router.use('/', _bidBricolBtCity2.default);
 router.use('/admin', requireAuth, _admin2.default);
 
 router.use('/', requireAuth, _specialRequest2.default);
+
+router.use('/', requireAuth, _trips2.default);
 exports.default = router;
 //# sourceMappingURL=index.js.map

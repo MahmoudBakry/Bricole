@@ -16,6 +16,10 @@ var _history = require('../controllers/history.controller');
 
 var _history2 = _interopRequireDefault(_history);
 
+var _trip = require('../controllers/bricoler-bt-citty/trip.controller');
+
+var _trip2 = _interopRequireDefault(_trip);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -65,6 +69,11 @@ router.route('/bricolers/:bricolerId/bricols-statistics').get(requireAuth, _user
 router.route('/bricolers/:bricolerId/history').get(requireAuth, _history2.default.retriveHistoryOfBricoler);
 
 router.route('/users/:userId/history').get(requireAuth, _history2.default.retriveHistoryOfUser);
+
+//trip routes 
+router.route('/bricolers/:bricolerId/trip-bt-city').post(requireAuth, (0, _multer.multerSaveTo)('trip').array('imgs'), _trip2.default.validateBody(), _trip2.default.createNewTrip).get(requireAuth, _trip2.default.fetchAllTripsBtCities);
+
+router.route('/bricolers/:bricolerId/my-trip-bt-city').get(requireAuth, _trip2.default.fetchAllTripsForOneBricoler);
 
 exports.default = router;
 //# sourceMappingURL=user.route.js.map

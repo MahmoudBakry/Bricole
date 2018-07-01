@@ -1,6 +1,7 @@
 import UserController from '../controllers/user.controller';
 import BricolerController from '../controllers/bricoler/bricoler.controller';
 import HistoryController from '../controllers/history.controller';
+import TripBtCityController from '../controllers/bricoler-bt-citty/trip.controller';
 import express from 'express';
 import passport from 'passport';
 import passportService from '../services/passport';
@@ -59,6 +60,17 @@ router.route('/bricolers/:bricolerId/history')
 
 router.route('/users/:userId/history')
     .get(requireAuth, HistoryController.retriveHistoryOfUser)
+
+//trip routes 
+router.route('/bricolers/:bricolerId/trip-bt-city')
+    .post(requireAuth,
+    multerSaveTo('trip').array('imgs'),
+    TripBtCityController.validateBody(),
+    TripBtCityController.createNewTrip)
+    .get(requireAuth, TripBtCityController.fetchAllTripsBtCities)
+
+router.route('/bricolers/:bricolerId/my-trip-bt-city')
+    .get(requireAuth, TripBtCityController.fetchAllTripsForOneBricoler)
 
 export default router;
 
