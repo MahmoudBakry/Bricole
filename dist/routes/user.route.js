@@ -20,6 +20,10 @@ var _trip = require('../controllers/bricoler-bt-citty/trip.controller');
 
 var _trip2 = _interopRequireDefault(_trip);
 
+var _favourite = require('../controllers/favourite/favourite.controller');
+
+var _favourite2 = _interopRequireDefault(_favourite);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -55,6 +59,9 @@ router.route('/users/:userId/bricols').get(requireAuth, _user2.default.fetchAllB
 router.route('/users/:userId/bricols-bt-city').get(requireAuth, _user2.default.retriveAllBricolsBtCityOfUser);
 
 router.route('/users/:userId/bricols-statistics').get(requireAuth, _user2.default.countNumberOfBricolsOfUser);
+
+//favourite routes 
+router.route('/users/:userId/favourites').post(requireAuth, _favourite2.default.addFavouriteToMyList).get(requireAuth, _favourite2.default.retriveAllFavouriteBricolersOfOneUser);
 
 //requests
 router.route('/bricolers/:bricolerId/special-requests').get(requireAuth, _bricoler2.default.fetchRequestOfOneBricoler);

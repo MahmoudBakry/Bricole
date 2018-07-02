@@ -117,8 +117,10 @@ var UserSchema = new _mongoose.Schema({
     rating: {
         type: Number,
         default: 0
-    }
-
+    },
+    favouritArray: [{
+        type: Number
+    }]
 });
 
 UserSchema.pre("save", function (next) {

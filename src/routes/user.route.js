@@ -2,6 +2,8 @@ import UserController from '../controllers/user.controller';
 import BricolerController from '../controllers/bricoler/bricoler.controller';
 import HistoryController from '../controllers/history.controller';
 import TripBtCityController from '../controllers/bricoler-bt-citty/trip.controller';
+import FavouriteController from '../controllers/favourite/favourite.controller';
+
 import express from 'express';
 import passport from 'passport';
 import passportService from '../services/passport';
@@ -40,6 +42,11 @@ router.route('/users/:userId/bricols-bt-city')
 
 router.route('/users/:userId/bricols-statistics')
     .get(requireAuth, UserController.countNumberOfBricolsOfUser)
+
+//favourite routes 
+router.route('/users/:userId/favourites')
+    .post(requireAuth, FavouriteController.addFavouriteToMyList)
+    .get(requireAuth, FavouriteController.retriveAllFavouriteBricolersOfOneUser)
 
 //requests
 router.route('/bricolers/:bricolerId/special-requests')
