@@ -3,7 +3,9 @@ import BricolerController from '../controllers/bricoler/bricoler.controller';
 import HistoryController from '../controllers/history.controller';
 import TripBtCityController from '../controllers/bricoler-bt-citty/trip.controller';
 import FavouriteController from '../controllers/favourite/favourite.controller';
+import NotificationController from '../controllers/notification.controller';
 
+import pushRoute from "./push-notification.route";
 import express from 'express';
 import passport from 'passport';
 import passportService from '../services/passport';
@@ -11,6 +13,9 @@ import { multerSaveTo } from '../services/multer'
 const requireSignIn = passport.authenticate('local', { session: false });
 const requireAuth = passport.authenticate('jwt', { session: false });
 const router = express.Router();
+
+//notifications routes
+router.use(pushRoute);
 
 router.route('/signup')
     .post(
@@ -78,6 +83,11 @@ router.route('/bricolers/:bricolerId/trip-bt-city')
 
 router.route('/bricolers/:bricolerId/my-trip-bt-city')
     .get(requireAuth, TripBtCityController.fetchAllTripsForOneBricoler)
+
+//notification routes 
+router.route("/users/:userId/notification")
+    .get(requireAuth, NotificationController.retriveAllNotification)
+
 
 export default router;
 

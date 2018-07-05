@@ -123,66 +123,69 @@ exports.default = {
         var _this2 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var userId, userDetails, bricolerArray, arrayLength, result, x, userDoc;
+            var limit, page, userId, userDetails, bricolerArray, arrayLength, result, x, userDoc, count;
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
                         case 0:
                             _context2.prev = 0;
+                            limit = parseInt(req.query.limit) || 20;
+                            page = req.query.page || 1;
                             userId = req.params.userId;
-                            _context2.next = 4;
+                            _context2.next = 6;
                             return _user2.default.findById(userId);
 
-                        case 4:
+                        case 6:
                             userDetails = _context2.sent;
 
                             if (userDetails) {
-                                _context2.next = 7;
+                                _context2.next = 9;
                                 break;
                             }
 
                             return _context2.abrupt('return', res.status(404).end());
 
-                        case 7:
+                        case 9:
                             bricolerArray = userDetails.favouritArray;
                             arrayLength = bricolerArray.length;
                             result = [];
                             x = 0;
 
-                        case 11:
+                        case 13:
                             if (!(x < arrayLength)) {
-                                _context2.next = 19;
+                                _context2.next = 21;
                                 break;
                             }
 
-                            _context2.next = 14;
+                            _context2.next = 16;
                             return _user2.default.findById(bricolerArray[x]).populate('job').populate('city');
 
-                        case 14:
+                        case 16:
                             userDoc = _context2.sent;
 
                             result.push(userDoc);
 
-                        case 16:
+                        case 18:
                             x++;
-                            _context2.next = 11;
+                            _context2.next = 13;
                             break;
 
-                        case 19:
-                            return _context2.abrupt('return', res.status(200).json(result));
+                        case 21:
+                            count = arrayLength;
+                            return _context2.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 22:
-                            _context2.prev = 22;
+                        case 25:
+                            _context2.prev = 25;
                             _context2.t0 = _context2['catch'](0);
 
                             next(_context2.t0);
 
-                        case 25:
+                        case 28:
                         case 'end':
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2, [[0, 22]]);
+            }, _callee2, _this2, [[0, 25]]);
         }))();
     }
 };

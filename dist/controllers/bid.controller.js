@@ -22,6 +22,10 @@ var _history = require('../models/history.model');
 
 var _history2 = _interopRequireDefault(_history);
 
+var _notification = require('../models/notification.model');
+
+var _notification2 = _interopRequireDefault(_notification);
+
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -54,7 +58,8 @@ exports.default = {
         var _this = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var validationErrors, query, bidExist, bricolId, newBid;
+            var validationErrors, bricolDetails, query, bidExist, newNoti, title, _body, bricolId, newBid;
+
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
@@ -70,49 +75,81 @@ exports.default = {
                             return _context.abrupt('return', next(new _ApiError2.default(422, validationErrors)));
 
                         case 4:
+                            _context.next = 6;
+                            return _bricole2.default.findById(req.params.bricolId);
+
+                        case 6:
+                            bricolDetails = _context.sent;
+
+                            if (bricolDetails) {
+                                _context.next = 9;
+                                break;
+                            }
+
+                            return _context.abrupt('return', res.status(404).end());
+
+                        case 9:
                             query = {
                                 user: req.body.user,
                                 bricol: req.params.bricolId,
                                 bidType: 'bricol'
                             };
-                            _context.next = 7;
+                            _context.next = 12;
                             return _bid2.default.findOne(query);
 
-                        case 7:
+                        case 12:
                             bidExist = _context.sent;
 
                             if (!bidExist) {
-                                _context.next = 11;
+                                _context.next = 16;
                                 break;
                             }
 
                             console.log(bidExist);
                             return _context.abrupt('return', next(new _ApiError2.default(400, 'لا يمكنك إضافة عرضين لنفس الخدمة')));
 
-                        case 11:
+                        case 16:
+                            _context.next = 18;
+                            return _notification2.default.create({
+                                targetUser: bricolDetails.user,
+                                subjectType: 'bricol',
+                                subject: req.params.bricolId,
+                                text: 'لديك عرض جديد على خدمتك'
+                            });
+
+                        case 18:
+                            newNoti = _context.sent;
+
+
+                            //send notifications
+                            title = "لديك عرض جديد على خدمتك";
+                            _body = "أضاف أحد مزودي الخدمات عرضًا جديدًا لخدمتك ،خذ جولة واقرأ هذا العرض";
+
+                            send(bricolDetails.user, title, _body);
+
                             bricolId = req.params.bricolId;
 
                             req.body.bricol = bricolId;
                             req.body.bidType = 'bricol';
-                            _context.next = 16;
+                            _context.next = 27;
                             return _bid2.default.create(req.body);
 
-                        case 16:
+                        case 27:
                             newBid = _context.sent;
                             return _context.abrupt('return', res.status(201).json(newBid));
 
-                        case 20:
-                            _context.prev = 20;
+                        case 31:
+                            _context.prev = 31;
                             _context.t0 = _context['catch'](0);
 
                             next(_context.t0);
 
-                        case 23:
+                        case 34:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 20]]);
+            }, _callee, _this, [[0, 31]]);
         }))();
     },
 
@@ -266,7 +303,7 @@ exports.default = {
         var _this5 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
-            var bidId, bricolId, bidDetails, bricolDetails, userId, historyQuery, historyDoc;
+            var bidId, bricolId, bidDetails, bricolDetails, userId, historyQuery, historyDoc, newNoti, title, body;
             return regeneratorRuntime.wrap(function _callee5$(_context5) {
                 while (1) {
                     switch (_context5.prev = _context5.next) {
@@ -355,9 +392,28 @@ exports.default = {
 
                             _context5.t0.log.call(_context5.t0, _context5.t1);
 
+                            _context5.next = 40;
+                            return _notification2.default.create({
+                                targetUser: bidDetails.user,
+                                subjectType: 'bid',
+                                subject: bidDetails.id,
+                                text: 'تم قبول عرضك من مالك الخدمة'
+                            });
+
+                        case 40:
+                            newNoti = _context5.sent;
+
+
+                            //send notifications
+                            title = "تم قبول عرضك";
+                            body = "تم قبول عرضك من مالك الخدمة،اعمل بجد لكسب الثقة من الجميع";
+
+                            send(bidDetails.user, title, body);
+
+                            //return result
                             return _context5.abrupt('return', res.status(204).end());
 
-                        case 39:
+                        case 45:
                         case 'end':
                             return _context5.stop();
                     }

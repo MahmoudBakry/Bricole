@@ -24,6 +24,14 @@ var _favourite = require('../controllers/favourite/favourite.controller');
 
 var _favourite2 = _interopRequireDefault(_favourite);
 
+var _notification = require('../controllers/notification.controller');
+
+var _notification2 = _interopRequireDefault(_notification);
+
+var _pushNotification = require('./push-notification.route');
+
+var _pushNotification2 = _interopRequireDefault(_pushNotification);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -43,6 +51,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var requireSignIn = _passport2.default.authenticate('local', { session: false });
 var requireAuth = _passport2.default.authenticate('jwt', { session: false });
 var router = _express2.default.Router();
+
+//notifications routes
+router.use(_pushNotification2.default);
 
 router.route('/signup').post((0, _multer.multerSaveTo)('users').single('img'), _user2.default.validateBody(), _user2.default.signUp);
 
@@ -81,6 +92,9 @@ router.route('/users/:userId/history').get(requireAuth, _history2.default.retriv
 router.route('/bricolers/:bricolerId/trip-bt-city').post(requireAuth, (0, _multer.multerSaveTo)('trip').array('imgs'), _trip2.default.validateBody(), _trip2.default.createNewTrip).get(requireAuth, _trip2.default.fetchAllTripsBtCities);
 
 router.route('/bricolers/:bricolerId/my-trip-bt-city').get(requireAuth, _trip2.default.fetchAllTripsForOneBricoler);
+
+//notification routes 
+router.route("/users/:userId/notification").get(requireAuth, _notification2.default.retriveAllNotification);
 
 exports.default = router;
 //# sourceMappingURL=user.route.js.map

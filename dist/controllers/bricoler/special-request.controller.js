@@ -16,6 +16,10 @@ var _history = require('../../models/history.model');
 
 var _history2 = _interopRequireDefault(_history);
 
+var _notification = require('../../models/notification.model');
+
+var _notification2 = _interopRequireDefault(_notification);
+
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -55,7 +59,8 @@ exports.default = {
         var _this = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var validationErrors, bricolerId, x, lang, lat, requestLocation, newDoc, createdDoc, historyObject, historyDoc;
+            var validationErrors, bricolerId, x, lang, lat, requestLocation, newDoc, createdDoc, historyObject, historyDoc, newNoti, title, _body;
+
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
@@ -140,20 +145,38 @@ exports.default = {
 
                         case 33:
                             historyDoc = _context.sent;
+                            _context.next = 36;
+                            return _notification2.default.create({
+                                targetUser: createdDoc.bricoler,
+                                subjectType: 'special-request',
+                                subject: createdDoc.id,
+                                text: 'يطلب منك أحد العملاء خدمة جديدة'
+                            });
+
+                        case 36:
+                            newNoti = _context.sent;
+
+
+                            //send notifications
+                            title = "يطلب منك أحد العملاء خدمة جديدة";
+                            _body = "يطلب منك أحد العملاء خدمة جديدة, يرجى التحقق من ذلك والعمل بجد للفوز";
+
+                            send(createdDoc.bricoler, title, _body);
+
                             return _context.abrupt('return', res.status(201).json(createdDoc));
 
-                        case 37:
-                            _context.prev = 37;
+                        case 43:
+                            _context.prev = 43;
                             _context.t2 = _context['catch'](0);
 
                             next(_context.t2);
 
-                        case 40:
+                        case 46:
                         case 'end':
                             return _context.stop();
                     }
                 }
-            }, _callee, _this, [[0, 37]]);
+            }, _callee, _this, [[0, 43]]);
         }))();
     },
 
@@ -215,7 +238,8 @@ exports.default = {
         var _this3 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-            var bricolerId, bricolerDetails, requestId, requestDetails, newDoc, historyQuery, historyDoc;
+            var bricolerId, bricolerDetails, requestId, requestDetails, newDoc, historyQuery, historyDoc, newNoti, title, _body2;
+
             return regeneratorRuntime.wrap(function _callee3$(_context3) {
                 while (1) {
                     switch (_context3.prev = _context3.next) {
@@ -279,20 +303,39 @@ exports.default = {
                             return historyDoc.save();
 
                         case 27:
+                            _context3.next = 29;
+                            return _notification2.default.create({
+                                targetUser: newDoc.user,
+                                subjectType: 'special-request',
+                                subject: newDoc.id,
+                                text: 'تم قبول طلبك من مزود الخدمة'
+                            });
+
+                        case 29:
+                            newNoti = _context3.sent;
+
+
+                            //send notifications
+                            title = "تم قبول طلبك من مزود الخدمة";
+                            _body2 = "تم قبول طلبك من مزود الخدمة, يرجى أن تكون متصلا به دائما";
+
+                            send(newDoc.user, title, _body2);
+
+                            //return responce 
                             return _context3.abrupt('return', res.status(200).json(newDoc));
 
-                        case 30:
-                            _context3.prev = 30;
+                        case 36:
+                            _context3.prev = 36;
                             _context3.t0 = _context3['catch'](0);
 
                             next(_context3.t0);
 
-                        case 33:
+                        case 39:
                         case 'end':
                             return _context3.stop();
                     }
                 }
-            }, _callee3, _this3, [[0, 30]]);
+            }, _callee3, _this3, [[0, 36]]);
         }))();
     },
 
@@ -301,7 +344,8 @@ exports.default = {
         var _this4 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-            var bricolerId, bricolerDetails, requestId, requestDetails, newDoc, historyQuery, historyDoc;
+            var bricolerId, bricolerDetails, requestId, requestDetails, newDoc, historyQuery, historyDoc, newNoti, title, _body3;
+
             return regeneratorRuntime.wrap(function _callee4$(_context4) {
                 while (1) {
                     switch (_context4.prev = _context4.next) {
@@ -346,39 +390,60 @@ exports.default = {
                             newDoc = _context4.sent;
 
 
-                            //update bricole history 
+                            //update bricole history
+                            console.log(requestDetails.id);
+                            console.log(requestDetails.user);
+                            console.log(requestDetails.bricoler);
                             historyQuery = {
                                 serviceType: 'special-request',
                                 service: requestDetails.id,
                                 user: requestDetails.user,
                                 bricoler: requestDetails.bricoler
                             };
-                            _context4.next = 22;
+                            _context4.next = 25;
                             return _history2.default.findOne(historyQuery);
 
-                        case 22:
+                        case 25:
                             historyDoc = _context4.sent;
 
                             console.log(historyDoc);
                             historyDoc.status = "ignored";
-                            _context4.next = 27;
+                            _context4.next = 30;
                             return historyDoc.save();
 
-                        case 27:
+                        case 30:
+                            _context4.next = 32;
+                            return _notification2.default.create({
+                                targetUser: newDoc.user,
+                                subjectType: 'special-request',
+                                subject: newDoc.id,
+                                text: 'نحن نأسف لرفض طلبك من مزود الخدمة'
+                            });
+
+                        case 32:
+                            newNoti = _context4.sent;
+
+
+                            //send notifications
+                            title = "نحن نأسف لرفض طلبك من مزود الخدمة";
+                            _body3 = "نحن نأسف لرفض طلبك من مزود الخدمة , يمكن أن يكون مشغولاً الآن ولا يمكنه مساعدتك";
+
+                            send(newDoc.user, title, _body3);
+
                             return _context4.abrupt('return', res.status(200).json(newDoc));
 
-                        case 30:
-                            _context4.prev = 30;
+                        case 39:
+                            _context4.prev = 39;
                             _context4.t0 = _context4['catch'](0);
 
                             next(_context4.t0);
 
-                        case 33:
+                        case 42:
                         case 'end':
                             return _context4.stop();
                     }
                 }
-            }, _callee4, _this4, [[0, 30]]);
+            }, _callee4, _this4, [[0, 39]]);
         }))();
     }
 };

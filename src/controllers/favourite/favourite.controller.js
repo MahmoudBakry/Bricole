@@ -44,6 +44,9 @@ export default {
     async retriveAllFavouriteBricolersOfOneUser(req, res, next) {
         try {
 
+            const limit = parseInt(req.query.limit) || 20;
+            const page = req.query.page || 1;
+
             let userId = req.params.userId;
             let userDetails = await User.findById(userId);
             if (!userDetails)
@@ -59,7 +62,15 @@ export default {
                 result.push(userDoc);
             }
 
-            return res.status(200).json(result);
+            let count = arrayLength;
+            return res.send(new ApiResponse(
+                result,
+                page,
+                Math.ceil(count / limit),
+                limit,
+                count,
+                req
+            ))
 
         } catch (err) {
             next(err)

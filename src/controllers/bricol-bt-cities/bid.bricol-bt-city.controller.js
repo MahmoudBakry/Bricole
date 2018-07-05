@@ -2,6 +2,8 @@ import Bid from '../../models/bid.model';
 import BricolBtCities from '../../models/bricol-bt-cities.model';
 import User from '../../models/user.model';
 import History from '../../models/history.model';
+import Notification from '../../models/notification.model';
+
 import mongoose from 'mongoose';
 import ApiResponse from '../../helpers/ApiResponse';
 import ApiError from '../../helpers/ApiError';
@@ -26,6 +28,11 @@ export default {
             const validationErrors = validationResult(req).array();
             if (validationErrors.length > 0)
                 return next(new ApiError(422, validationErrors));
+
+            let bricolDetails = await Bricol.findById(req.params.bricolId);
+            if (!bricolDetails)
+                return res.status(404).end();
+
             let query = {
                 user: req.body.user,
                 bricol: req.params.bricolId,
@@ -42,6 +49,20 @@ export default {
             req.body.bricol = bricolId;
             req.body.bidType = 'bricol-bt-cities';
             let newBid = await Bid.create(req.body);
+
+            //in app notification 
+            let newNoti = await Notification.create({
+                targetUser: bricolDetails.user,
+                subjectType: 'bricol-bt-cities',
+                subject: req.params.bricolId,
+                text: 'لديك عرض جديد على خدمتك',
+            });
+
+            //send notifications
+            let title = "لديك عرض جديد على خدمتك";
+            let body = "أضاف أحد مزودي الخدمات عرضًا جديدًا لخدمتك ،خذ جولة واقرأ هذا العرض"
+            send(bricolDetails.user, title, body)
+
             return res.status(201).json(newBid);
         } catch (err) {
             next(err)
@@ -114,6 +135,20 @@ export default {
         historyDoc.bricoler = bidDetails.user;
         await historyDoc.save();
         console.log(await History.findOne(historyQuery));
+
+
+        //in app notification 
+        let newNoti = await Notification.create({
+            targetUser: bidDetails.user,
+            subjectType: 'bid',
+            subject: bidDetails.id,
+            text: 'تم قبول عرضك من مالك الخدمة',
+        });
+
+        //send notifications
+        let title = "تم قبول عرضك";
+        let body = "تم قبول عرضك من مالك الخدمة،اعمل بجد لكسب الثقة من الجميع"
+        send(bidDetails.user, title, body)
 
         //return result
         return res.status(204).end();
