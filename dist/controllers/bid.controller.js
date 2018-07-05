@@ -40,6 +40,8 @@ var _ApiError2 = _interopRequireDefault(_ApiError);
 
 var _check = require('express-validator/check');
 
+var _pushNotifications = require('../services/push-notifications');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -125,7 +127,7 @@ exports.default = {
                             title = "لديك عرض جديد على خدمتك";
                             _body = "أضاف أحد مزودي الخدمات عرضًا جديدًا لخدمتك ،خذ جولة واقرأ هذا العرض";
 
-                            send(bricolDetails.user, title, _body);
+                            (0, _pushNotifications.send)(bricolDetails.user, title, _body);
 
                             bricolId = req.params.bricolId;
 
@@ -408,7 +410,7 @@ exports.default = {
                             title = "تم قبول عرضك";
                             body = "تم قبول عرضك من مالك الخدمة،اعمل بجد لكسب الثقة من الجميع";
 
-                            send(bidDetails.user, title, body);
+                            (0, _pushNotifications.send)(bidDetails.user, title, body);
 
                             //return result
                             return _context5.abrupt('return', res.status(204).end());

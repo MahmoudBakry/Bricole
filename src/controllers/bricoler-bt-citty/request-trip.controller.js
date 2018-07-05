@@ -7,6 +7,7 @@ import ApiError from '../../helpers/ApiError';
 import { body, param, validationResult } from 'express-validator/check';
 import { toImgUrl } from '../../utils/index'
 import { escapeRegExp } from 'lodash';
+import { send } from '../../services/push-notifications';
 
 export default {
     async createNewRequest(req, res, next) {

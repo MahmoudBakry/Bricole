@@ -10,6 +10,7 @@ import { body, param, validationResult } from 'express-validator/check';
 import { escapeRegExp } from 'lodash';
 import * as _ from 'lodash';
 import { toImgUrl } from '../../utils/index'
+import { send } from '../../services/push-notifications';
 
 export default {
 
