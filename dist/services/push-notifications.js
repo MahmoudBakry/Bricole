@@ -87,7 +87,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var serviceAccount = require("../service-account.json");
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://rawaaprovider.firebaseio.com"
+    credential: admin.credential.cert(serviceAccount)
+    //databaseURL: "https://rawaaprovider.firebaseio.com"
 });
 //# sourceMappingURL=push-notifications.js.map

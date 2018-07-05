@@ -5,7 +5,7 @@ const serviceAccount = require("../service-account.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://rawaaprovider.firebaseio.com"
+    //databaseURL: "https://rawaaprovider.firebaseio.com"
 });
 
 //push manual notification
