@@ -24,7 +24,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+var deg2rad = function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+};
 exports.default = {
+
     //add one bricoler to user favourite list
     addFavouriteToMyList: function addFavouriteToMyList(req, res, next) {
         var _this = this;
@@ -123,7 +127,8 @@ exports.default = {
         var _this2 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var limit, page, userId, userDetails, bricolerArray, arrayLength, result, x, userDoc, count;
+            var limit, page, userId, userDetails, bricolerArray, arrayLength, result, x, userDoc, userLocation, finalResult, _x, bricolerLocationToDistance, lang1, lat1, lang2, lat2, R, dLat, dLon, a, c, d, count;
+
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -171,21 +176,52 @@ exports.default = {
                             break;
 
                         case 21:
-                            count = arrayLength;
-                            return _context2.abrupt('return', res.send(new _ApiResponse2.default(result, page, Math.ceil(count / limit), limit, count, req)));
 
-                        case 25:
-                            _context2.prev = 25;
+                            //1 - calculate distance between user and bricoler
+                            userLocation = req.user.location;
+                            finalResult = [];
+
+                            for (_x = 0; _x < result.length; _x++) {
+                                bricolerLocationToDistance = result[_x].location;
+
+                                //first locattion point
+
+                                lang1 = parseFloat(bricolerLocationToDistance[0]);
+                                lat1 = parseFloat(bricolerLocationToDistance[1]);
+
+                                console.log(lang1);
+
+                                //scound location point
+                                lang2 = parseFloat(userLocation[0]);
+                                lat2 = parseFloat(userLocation[1]);
+                                R = 6371; // Radius of the earth in km
+
+                                dLat = deg2rad(lat2 - lat1); // deg2rad above
+
+                                dLon = deg2rad(lang2 - lang1);
+                                a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                                c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                                d = R * c; // Distance in km
+                                //console.log(d)
+
+                                finalResult.push({ bricol: result[_x], distanceInKm: d });
+                            }
+
+                            count = arrayLength;
+                            return _context2.abrupt('return', res.send(new _ApiResponse2.default(finalResult, page, Math.ceil(count / limit), limit, count, req)));
+
+                        case 28:
+                            _context2.prev = 28;
                             _context2.t0 = _context2['catch'](0);
 
                             next(_context2.t0);
 
-                        case 28:
+                        case 31:
                         case 'end':
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2, [[0, 25]]);
+            }, _callee2, _this2, [[0, 28]]);
         }))();
     }
 };
